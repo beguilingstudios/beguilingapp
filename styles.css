@@ -10,7 +10,7 @@ html, body {
   -webkit-text-size-adjust: 100%;
 }
 
-body { padding-bottom: 70px; }
+body { padding-bottom: 20px; }
 
 button, input, select { font-family: inherit; font-size: 16px; }
 
@@ -116,35 +116,6 @@ button, input, select { font-family: inherit; font-size: 16px; }
 }
 .wide { display: block; width: 100%; margin-top: 18px; }
 
-#bottomNav {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  height: 64px;
-  background: #ffffff;
-  border-top: 1px solid #f2d7db;
-  z-index: 10;
-  white-space: nowrap;
-}
-.nav {
-  float: left;
-  width: 20%;
-  height: 64px;
-  border: 0;
-  background: #ffffff;
-  color: #8a6670;
-  font-weight: bold;
-  font-size: 13px;
-}
-.nav.active { background: #ffe5e8; color: #e95f70; }
-
-.hidden { display: none !important; }
-
-#shade {
-  position: fixed;
-  left: 0; right: 0; top: 0; bottom: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 20;
-}
 
 .modal {
   position: fixed;
@@ -270,4 +241,77 @@ input, select {
   .home-choice-wrap { margin-top: 22px; }
   .home-choice-wrap h1 { font-size: 29px; }
   .promo-choice { min-height: 120px; }
+}
+
+
+/* v4 confirmed promo packages */
+.package-card {
+  border-left: 6px solid #ff8877;
+}
+.package-card h2 {
+  color: #442B35;
+}
+.package-price {
+  font-size: 28px;
+  color: #e95f70;
+}
+.package-note {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.package-action {
+  display: block;
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: #ff7f73;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 15px;
+  -webkit-appearance: none;
+}
+
+
+/* v5 customer-only booking flow */
+textarea {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px;
+  border: 1px solid #efcfd4;
+  border-radius: 8px;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.selected-package-box {
+  background: #fff4f5;
+  border: 1px solid #f2d7db;
+  border-left: 5px solid #ff7f73;
+  border-radius: 10px;
+  padding: 14px;
+  margin: 8px 0 16px;
+  color: #442B35;
+}
+
+.selected-package-box strong {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+#topbar {
+  text-align: left;
+}
+
+#topbar > div {
+  float: none;
+}
+
+.home-choice-wrap {
+  padding-bottom: 20px;
 }
