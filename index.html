@@ -4,157 +4,37 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Beguiling Studios</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-  <div id="topbar">
-    <div class="brand-mark">BS</div>
-    <div class="brand-copy">
-      <div class="brand-name">Beguiling Studios</div>
-      <div class="small-label">Bookings</div>
-    </div>
+<div id="topbar">
+  <div class="brand-mark">BS</div>
+  <div class="brand-copy">
+    <div class="brand-name">Beguiling Studios</div>
+    <div class="small-label">Bookings</div>
   </div>
+</div>
+<div class="content">
 
-  <div id="content">
+<div class="home-wrap">
+  <div class="small-label">Beguiling Studios</div>
+  <h1>What are you booking?</h1>
+  <p class="intro">Choose an option below to view the available promo packages.</p>
 
-    <div id="page-home" class="page active">
-      <div class="home-choice-wrap">
-        <div class="small-label">Beguiling Studios</div>
-        <h1>What are you booking?</h1>
-        <p class="home-intro">Choose an option below to view the available promo packages.</p>
+  <a class="big-choice matric" href="matric.html">
+    <span class="choice-title">Matric Dance</span>
+    <span class="choice-sub">View Matric Dance promo package</span>
+    <span class="choice-arrow">&rsaquo;</span>
+  </a>
 
-        <button id="matricButton" class="promo-choice matric-choice" type="button">
-          <span class="promo-choice-title">Matric Dance</span>
-          <span class="promo-choice-sub">View Matric Dance promo package</span>
-          <span class="promo-arrow">&rsaquo;</span>
-        </button>
+  <a class="big-choice wedding" href="wedding.html">
+    <span class="choice-title">Wedding</span>
+    <span class="choice-sub">View Wedding promo packages</span>
+    <span class="choice-arrow">&rsaquo;</span>
+  </a>
+</div>
 
-        <button id="weddingButton" class="promo-choice wedding-choice" type="button">
-          <span class="promo-choice-title">Wedding</span>
-          <span class="promo-choice-sub">View Wedding promo packages</span>
-          <span class="promo-arrow">&rsaquo;</span>
-        </button>
-      </div>
-    </div>
-
-    <div id="page-promos" class="page">
-      <button id="backToHome" class="back-button" type="button">&lsaquo; Back</button>
-      <div class="small-label">Promo Packages</div>
-      <h1 id="promoPageTitle">Packages</h1>
-      <p id="promoPageIntro" class="home-intro"></p>
-      <div id="promoPackageList"></div>
-    </div>
-
-  </div>
-
-  <div id="shade" class="hidden"></div>
-
-  <div id="bookingModal" class="modal hidden">
-    <div class="modal-head">
-      <h2>Complete Your Booking</h2>
-      <button id="closeBooking" class="close" type="button">X</button>
-    </div>
-
-    <div id="selectedPackageSummary" class="selected-package-box"></div>
-
-    <form id="bookingForm">
-      <input id="bookingPackage" type="hidden">
-      <input id="bookingAmount" type="hidden">
-
-      <label>Full Name
-        <input id="bookingCustomer" type="text" required>
-      </label>
-
-      <label>Mobile Number
-        <input id="bookingPhone" type="tel" required>
-      </label>
-
-      <label>Email Address
-        <input id="bookingEmail" type="email">
-      </label>
-
-      <label>Event Date
-        <input id="bookingDate" type="date" required>
-      </label>
-
-      <label>Preferred Time
-        <input id="bookingTime" type="time" required>
-      </label>
-
-      <label>Venue / Location
-        <input id="bookingVenue" type="text" required>
-      </label>
-
-      <label>Notes
-        <textarea id="bookingNotes" rows="4" placeholder="Anything else we should know?"></textarea>
-      </label>
-
-      <button class="action-button" type="submit">SUBMIT BOOKING REQUEST</button>
-    </form>
-  </div>
-
-  <div id="quoteModal" class="modal hidden">
-    <div class="modal-head">
-      <h2>Personalised Wedding Quote</h2>
-      <button id="closeQuote" class="close" type="button">X</button>
-    </div>
-
-    <form id="quoteForm">
-      <label>Full Name
-        <input id="quoteName" type="text" required>
-      </label>
-
-      <label>Mobile Number
-        <input id="quotePhone" type="tel" required>
-      </label>
-
-      <label>Email Address
-        <input id="quoteEmail" type="email">
-      </label>
-
-      <label>Wedding Date
-        <input id="quoteDate" type="date" required>
-      </label>
-
-      <label>Venue / Location
-        <input id="quoteVenue" type="text" required>
-      </label>
-
-      <label>Number of Bridesmaids
-        <input id="quoteBridesmaids" type="number" min="0" value="0">
-      </label>
-
-      <label>Number of MOB / MOG
-        <input id="quoteMothers" type="number" min="0" value="0">
-      </label>
-
-      <label>Flower Girl / Granny
-        <select id="quoteFlowerGranny">
-          <option value="None">None</option>
-          <option value="Flower Girl">Flower Girl</option>
-          <option value="Granny">Granny</option>
-        </select>
-      </label>
-
-      <label>What do you need?
-        <select id="quoteServices">
-          <option value="Makeup & Hair">Makeup & Hair</option>
-          <option value="Makeup Only">Makeup Only</option>
-          <option value="Hair Only">Hair Only</option>
-        </select>
-      </label>
-
-      <label>Additional Information
-        <textarea id="quoteNotes" rows="4" placeholder="Tell us anything else about your wedding party or requirements."></textarea>
-      </label>
-
-      <button class="action-button" type="submit">REQUEST MY QUOTE</button>
-    </form>
-  </div>
-
-  <script src="app.js"></script>
+</div>
 </body>
 </html>

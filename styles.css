@@ -12,9 +12,12 @@ html, body {
   -webkit-text-size-adjust: 100%;
 }
 
-button, input, select, textarea {
-  font-family: inherit;
-  font-size: 16px;
+body {
+  padding-bottom: 30px;
+}
+
+a {
+  text-decoration: none;
 }
 
 #topbar {
@@ -45,6 +48,7 @@ button, input, select, textarea {
 .brand-name {
   font-size: 20px;
   font-weight: bold;
+  color: #442b35;
 }
 
 .small-label {
@@ -54,85 +58,73 @@ button, input, select, textarea {
   text-transform: uppercase;
 }
 
-#content {
-  max-width: 820px;
+.content {
+  max-width: 760px;
   margin: 0 auto;
   padding: 18px;
 }
 
-.page {
-  display: none;
+.home-wrap {
+  margin-top: 34px;
 }
 
-.page.active {
-  display: block;
-}
-
-.home-choice-wrap {
-  margin: 35px auto 0;
-  max-width: 700px;
-}
-
-.home-choice-wrap h1 {
-  margin: 7px 0 8px;
+h1 {
   font-size: 34px;
+  margin: 7px 0 8px;
 }
 
-.home-intro {
-  margin: 0 0 25px;
+.intro {
   color: #8a6670;
   font-size: 17px;
-  line-height: 1.4;
+  line-height: 1.45;
+  margin: 0 0 25px;
 }
 
-.promo-choice {
+.big-choice {
   position: relative;
   display: block;
   width: 100%;
-  min-height: 130px;
-  margin: 0 0 18px;
+  min-height: 132px;
+  margin-bottom: 18px;
   padding: 25px 62px 25px 25px;
-  border: 0;
   border-radius: 18px;
-  text-align: left;
   color: #ffffff;
-  -webkit-appearance: none;
 }
 
-.matric-choice {
+.matric {
   background: #f06b82;
 }
 
-.wedding-choice {
+.wedding {
   background: #ff8877;
 }
 
-.promo-choice-title {
+.choice-title {
   display: block;
   font-size: 27px;
-  line-height: 1.1;
   font-weight: bold;
 }
 
-.promo-choice-sub {
+.choice-sub {
   display: block;
   margin-top: 10px;
   font-size: 15px;
+  color: #ffffff;
 }
 
-.promo-arrow {
+.choice-arrow {
   position: absolute;
   right: 24px;
   top: 39px;
   font-size: 42px;
+  color: #ffffff;
 }
 
-.back-button {
-  border: 0;
-  background: transparent;
+.back-link {
+  display: inline-block;
   color: #e95f70;
-  padding: 8px 0 15px;
   font-weight: bold;
+  margin: 4px 0 18px;
 }
 
 .package-card {
@@ -146,6 +138,7 @@ button, input, select, textarea {
 
 .package-card h2 {
   margin: 0 0 7px;
+  color: #442b35;
 }
 
 .package-price {
@@ -161,8 +154,8 @@ button, input, select, textarea {
   line-height: 1.5;
 }
 
-.action-button,
-.package-action {
+.action-link,
+.submit-button {
   display: block;
   width: 100%;
   margin-top: 17px;
@@ -172,72 +165,29 @@ button, input, select, textarea {
   background: #ff7f73;
   color: #ffffff;
   font-weight: bold;
+  font-size: 16px;
+  text-align: center;
   -webkit-appearance: none;
 }
 
-.hidden {
-  display: none !important;
-}
-
-#shade {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 20;
-}
-
-.modal {
-  position: fixed;
-  z-index: 30;
-  top: 4%;
-  left: 5%;
-  width: 90%;
-  max-height: 90%;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 18px;
-}
-
-.modal-head {
-  overflow: hidden;
-}
-
-.modal-head h2 {
-  float: left;
-  margin: 4px 0;
-}
-
-.close {
-  float: right;
-  border: 0;
-  background: #f4f4f4;
-  border-radius: 8px;
-  padding: 9px 12px;
-}
-
-.selected-package-box {
-  background: #fff4f5;
+.summary {
+  background: #fff0f2;
   border: 1px solid #f2d7db;
   border-left: 5px solid #ff7f73;
   border-radius: 10px;
   padding: 14px;
-  margin: 12px 0 16px;
+  margin-bottom: 18px;
 }
 
-.selected-package-box strong {
+.summary strong {
   display: block;
-  font-size: 18px;
-  margin-bottom: 4px;
+  font-size: 19px;
+  margin-bottom: 5px;
 }
 
 label {
   display: block;
-  margin-top: 13px;
+  margin-top: 14px;
   font-weight: bold;
 }
 
@@ -250,22 +200,33 @@ input, select, textarea {
   border-radius: 8px;
   background: #ffffff;
   color: #442b35;
+  font-family: inherit;
+  font-size: 16px;
 }
 
 textarea {
-  resize: vertical;
+  min-height: 100px;
+}
+
+.thank-you {
+  background: #ffffff;
+  border: 1px solid #f2d7db;
+  border-radius: 16px;
+  padding: 25px;
+  margin-top: 35px;
+  text-align: center;
 }
 
 @media screen and (max-width: 760px) {
-  .home-choice-wrap {
+  .home-wrap {
     margin-top: 22px;
   }
 
-  .home-choice-wrap h1 {
+  h1 {
     font-size: 29px;
   }
 
-  .promo-choice {
+  .big-choice {
     min-height: 120px;
   }
 }

@@ -1,15 +1,17 @@
-# Beguiling Studios Booking App v5.1
+# Beguiling Studios v6 - No JavaScript Navigation
 
-Fixed customer-only build.
+This version uses normal HTML links instead of JavaScript for page navigation.
 
-This version contains only:
-- Home
-- Matric Dance
-- Wedding
-- Promo packages
-- Booking request form
-- Personalised wedding quote form
+Upload ALL files to the root of your GitHub Pages repository:
+- index.html
+- styles.css
+- matric.html
+- wedding.html
+- booking-matric.html
+- booking-wedding1.html
+- booking-wedding2.html
+- quote.html
+- thank-you.html
+- thank-you-quote.html
 
-No bottom navigation or admin pages.
-
-Upload index.html, styles.css and app.js to the root of your GitHub Pages repository.
+This is intentionally built for maximum compatibility with Safari on iOS 12.
