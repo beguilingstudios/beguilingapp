@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Booking & Invoicing</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="topbar">
+    <div>
+      <div class="small-label">Business Manager</div>
+      <div class="app-title">Booking &amp; Invoicing</div>
+    </div>
+    <button id="topNewBooking" class="blue-button">+ New Booking</button>
+  </div>
+
+  <div id="content">
+    <div id="page-home" class="page active">
+      <div class="panel hero">
+        <div class="small-label">Overview</div>
+        <h1>Good to see you</h1>
+        <p>Manage bookings, customers and invoices from one place.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span>Bookings</span><strong id="bookingCount">0</strong></div>
+        <div class="stat"><span>Customers</span><strong id="customerCount">0</strong></div>
+        <div class="stat"><span>Invoices</span><strong id="invoiceCount">0</strong></div>
+        <div class="stat"><span>Outstanding</span><strong id="outstandingTotal">R 0.00</strong></div>
+      </div>
+
+      <h2>Upcoming bookings</h2>
+      <div id="homeBookings"></div>
+    </div>
+
+    <div id="page-bookings" class="page">
+      <div class="section-head">
+        <div>
+          <div class="small-label">Schedule</div>
+          <h1>Bookings</h1>
+        </div>
+        <button id="pageNewBooking" class="blue-button">+ New Booking</button>
+      </div>
+      <div id="bookingsList"></div>
+    </div>
+
+    <div id="page-customers" class="page">
+      <div class="section-head">
+        <div>
+          <div class="small-label">Directory</div>
+          <h1>Customers</h1>
+        </div>
+        <button id="pageNewCustomer" class="blue-button">+ Customer</button>
+      </div>
+      <div id="customersList"></div>
+    </div>
+
+    <div id="page-invoices" class="page">
+      <div class="section-head">
+        <div>
+          <div class="small-label">Payments</div>
+          <h1>Invoices</h1>
+        </div>
+        <button id="pageNewInvoice" class="blue-button">+ Invoice</button>
+      </div>
+      <div id="invoicesList"></div>
+    </div>
+
+    <div id="page-more" class="page">
+      <div class="small-label">Setup</div>
+      <h1>Services</h1>
+      <div id="servicesList"></div>
+      <div class="panel">
+        <h2>Supabase</h2>
+        <p>Demo mode is active. Once this version works on the iPad, we will connect it to your existing Supabase database.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="bottomNav">
+    <button class="nav active" data-target="home">Home</button>
+    <button class="nav" data-target="bookings">Bookings</button>
+    <button class="nav" data-target="customers">Customers</button>
+    <button class="nav" data-target="invoices">Invoices</button>
+    <button class="nav" data-target="more">More</button>
+  </div>
+
+  <div id="shade" class="hidden"></div>
+
+  <div id="bookingModal" class="modal hidden">
+    <div class="modal-head">
+      <h2>New Booking</h2>
+      <button class="close" data-modal="bookingModal">X</button>
+    </div>
+    <form id="bookingForm">
+      <label>Customer<input id="bookingCustomer" type="text" required></label>
+      <label>Service<select id="bookingService" required></select></label>
+      <label>Date<input id="bookingDate" type="date" required></label>
+      <label>Time<input id="bookingTime" type="time" required></label>
+      <label>Amount (R)<input id="bookingAmount" type="number" required></label>
+      <label>Status
+        <select id="bookingStatus">
+          <option>Confirmed</option><option>Pending</option><option>Completed</option>
+        </select>
+      </label>
+      <button class="blue-button wide" type="submit">Save Booking</button>
+    </form>
+  </div>
+
+  <div id="customerModal" class="modal hidden">
+    <div class="modal-head">
+      <h2>Add Customer</h2>
+      <button class="close" data-modal="customerModal">X</button>
+    </div>
+    <form id="customerForm">
+      <label>Name<input id="customerName" type="text" required></label>
+      <label>Email<input id="customerEmail" type="email"></label>
+      <label>Phone<input id="customerPhone" type="tel"></label>
+      <button class="blue-button wide" type="submit">Save Customer</button>
+    </form>
+  </div>
+
+  <div id="invoiceModal" class="modal hidden">
+    <div class="modal-head">
+      <h2>Create Invoice</h2>
+      <button class="close" data-modal="invoiceModal">X</button>
+    </div>
+    <form id="invoiceForm">
+      <label>Customer<input id="invoiceCustomer" type="text" required></label>
+      <label>Invoice number<input id="invoiceNumber" type="text" required></label>
+      <label>Amount (R)<input id="invoiceAmount" type="number" required></label>
+      <label>Status
+        <select id="invoiceStatus">
+          <option>Unpaid</option><option>Paid</option><option>Overdue</option>
+        </select>
+      </label>
+      <button class="blue-button wide" type="submit">Save Invoice</button>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
