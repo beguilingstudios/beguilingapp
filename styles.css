@@ -254,3 +254,85 @@ textarea {
     font-size: 52px;
   }
 }
+
+
+/* v6.2 clean branded header and home */
+#topbar {
+  padding: 12px 18px;
+  background: #ffffff;
+}
+
+.brand-row {
+  display: table;
+  margin: 0 auto;
+}
+
+.brand-logo {
+  display: table-cell;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  vertical-align: middle;
+  margin-right: 12px;
+}
+
+.brand-name {
+  display: table-cell;
+  vertical-align: middle;
+  padding-left: 14px;
+  font-size: 26px;
+  font-weight: bold;
+  color: #442b35;
+  white-space: nowrap;
+}
+
+.clean-home {
+  margin-top: 42px;
+}
+
+.clean-choice {
+  height: 190px;
+  padding: 0 78px 0 30px;
+  line-height: 190px;
+}
+
+.clean-choice .choice-title {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1.1;
+  font-size: 40px;
+}
+
+.clean-choice .choice-arrow {
+  top: 64px;
+}
+
+@media screen and (max-width: 760px) {
+  .brand-logo {
+    width: 56px;
+    height: 56px;
+  }
+
+  .brand-name {
+    font-size: 22px;
+    padding-left: 10px;
+  }
+
+  .clean-home {
+    margin-top: 28px;
+  }
+
+  .clean-choice {
+    height: 165px;
+    line-height: 165px;
+  }
+
+  .clean-choice .choice-title {
+    font-size: 34px;
+  }
+
+  .clean-choice .choice-arrow {
+    top: 51px;
+  }
+}

@@ -18,3 +18,6 @@ This is intentionally built for maximum compatibility with Safari on iOS 12.
 
 
 v6.1: Restyled home choices as large full-width buttons.
+
+
+v6.2: Added Beguiling Studios logo, removed Bookings label, and simplified home to only two large buttons.
