@@ -22,20 +22,31 @@
 
   <div id="content">
     <div id="page-home" class="page active">
-      <div class="panel hero">
-        <div class="small-label">Overview</div>
-        <h1>Good to see you</h1>
-        <p>Manage bookings, customers and invoices from one place.</p>
-      </div>
+      <div class="home-choice-wrap">
+        <div class="small-label">Beguiling Studios</div>
+        <h1>What are you booking?</h1>
+        <p class="home-intro">Choose an option below to view the available promo packages.</p>
 
-      <div class="stats">
-        <div class="stat"><span>Bookings</span><strong id="bookingCount">0</strong></div>
-        <div class="stat"><span>Invoices</span><strong id="invoiceCount">0</strong></div>
-        <div class="stat"><span>Outstanding</span><strong id="outstandingTotal">R 0.00</strong></div>
-      </div>
+        <button class="promo-choice matric-choice" data-promo="Matric Dance">
+          <span class="promo-choice-title">Matric Dance</span>
+          <span class="promo-choice-sub">View Matric Dance promo packages</span>
+          <span class="promo-arrow">&rsaquo;</span>
+        </button>
 
-      <h2>Upcoming bookings</h2>
-      <div id="homeBookings"></div>
+        <button class="promo-choice wedding-choice" data-promo="Wedding">
+          <span class="promo-choice-title">Wedding</span>
+          <span class="promo-choice-sub">View Wedding promo packages</span>
+          <span class="promo-arrow">&rsaquo;</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="page-promos" class="page">
+      <button id="backToHome" class="back-button">&lsaquo; Back</button>
+      <div class="small-label">Promo Packages</div>
+      <h1 id="promoPageTitle">Packages</h1>
+      <p id="promoPageIntro" class="home-intro"></p>
+      <div id="promoPackageList"></div>
     </div>
 
     <div id="page-bookings" class="page">

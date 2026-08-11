@@ -25,3 +25,13 @@ Make sure `index.html` is directly inside the folder you upload, not inside anot
 ## Important
 
 This is a compatibility-test build. Once it loads successfully on the iPad, the next step is connecting it to Supabase.
+
+
+## v2 changes
+- Beguiling Studios branded header
+- Pink/coral theme
+- Customer count removed from dashboard
+
+
+## v3
+Home page now contains only Matric Dance and Wedding booking choices. Each opens a promo packages page.

@@ -187,3 +187,87 @@ input, select {
   .card-left, .card-right { float: none; width: 100%; text-align: left; }
   .card-right { margin-top: 10px; }
 }
+
+
+/* v3 home booking choices */
+.home-choice-wrap {
+  max-width: 720px;
+  margin: 38px auto 0;
+}
+.home-choice-wrap h1 {
+  font-size: 34px;
+  margin: 7px 0 8px;
+}
+.home-intro {
+  color: #8a6670;
+  font-size: 17px;
+  margin: 0 0 26px;
+}
+.promo-choice {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 132px;
+  margin: 0 0 18px;
+  padding: 25px 64px 25px 25px;
+  border: 0;
+  border-radius: 18px;
+  text-align: left;
+  color: #ffffff;
+  -webkit-appearance: none;
+}
+.matric-choice { background: #f06b82; }
+.wedding-choice { background: #ff8877; }
+.promo-choice-title {
+  display: block;
+  font-size: 27px;
+  line-height: 1.1;
+  font-weight: bold;
+}
+.promo-choice-sub {
+  display: block;
+  font-size: 15px;
+  margin-top: 10px;
+  opacity: 0.95;
+}
+.promo-arrow {
+  position: absolute;
+  right: 24px;
+  top: 39px;
+  font-size: 42px;
+  line-height: 42px;
+}
+.back-button {
+  border: 0;
+  background: transparent;
+  color: #e95f70;
+  padding: 6px 0 14px;
+  font-weight: bold;
+  font-size: 16px;
+}
+.package-card {
+  background: #ffffff;
+  border: 1px solid #f2d7db;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 13px;
+}
+.package-card h2 {
+  margin: 0 0 7px;
+}
+.package-price {
+  color: #e95f70;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 8px 0;
+}
+.package-note {
+  color: #8a6670;
+  margin: 0;
+}
+
+@media screen and (max-width: 760px) {
+  .home-choice-wrap { margin-top: 22px; }
+  .home-choice-wrap h1 { font-size: 29px; }
+  .promo-choice { min-height: 120px; }
+}

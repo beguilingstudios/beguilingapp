@@ -76,18 +76,47 @@
     e.innerHTML = html || '<div class="panel">Nothing here yet.</div>';
   }
 
+  var promoPackages = {
+    "Matric Dance": [
+      {name:"Matric Dance Package 1", price:"Coming soon", note:"Package details will be added next."},
+      {name:"Matric Dance Package 2", price:"Coming soon", note:"Package details will be added next."},
+      {name:"Matric Dance Package 3", price:"Coming soon", note:"Package details will be added next."}
+    ],
+    "Wedding": [
+      {name:"Wedding Package 1", price:"Coming soon", note:"Package details will be added next."},
+      {name:"Wedding Package 2", price:"Coming soon", note:"Package details will be added next."},
+      {name:"Wedding Package 3", price:"Coming soon", note:"Package details will be added next."}
+    ]
+  };
+
+  function showPromoPackages(category) {
+    var packages = promoPackages[category] || [];
+    var html = "";
+    var i;
+
+    document.getElementById("promoPageTitle").innerHTML = safe(category);
+    document.getElementById("promoPageIntro").innerHTML = "Choose the promo package you would like to use.";
+
+    for (i = 0; i < packages.length; i++) {
+      html += '<div class="package-card">' +
+        '<h2>' + safe(packages[i].name) + '</h2>' +
+        '<div class="package-price">' + safe(packages[i].price) + '</div>' +
+        '<p class="package-note">' + safe(packages[i].note) + '</p>' +
+        '</div>';
+    }
+
+    document.getElementById("promoPackageList").innerHTML = html;
+    showPage("promos");
+  }
+
   function render() {
     var outstanding = 0, i, opts = '<option value="">Choose a service</option>';
 
-    document.getElementById("bookingCount").innerHTML = data.bookings.length;
-    document.getElementById("invoiceCount").innerHTML = data.invoices.length;
 
     for (i = 0; i < data.invoices.length; i++) {
       if (data.invoices[i].status !== "Paid") outstanding += Number(data.invoices[i].amount || 0);
     }
-    document.getElementById("outstandingTotal").innerHTML = money(outstanding);
 
-    list("homeBookings", data.bookings, bookingHTML);
     list("bookingsList", data.bookings, bookingHTML);
     list("customersList", data.customers, customerHTML);
     list("invoicesList", data.invoices, invoiceHTML);
@@ -132,6 +161,17 @@
     var navs = document.getElementsByClassName("nav");
     var closes = document.getElementsByClassName("close");
     var i;
+    var promoChoices = document.getElementsByClassName("promo-choice");
+
+    for (i = 0; i < promoChoices.length; i++) {
+      promoChoices[i].onclick = function () {
+        showPromoPackages(this.getAttribute("data-promo"));
+      };
+    }
+
+    document.getElementById("backToHome").onclick = function () {
+      showPage("home");
+    };
 
     for (i = 0; i < navs.length; i++) {
       navs[i].onclick = function () { showPage(this.getAttribute("data-target")); };
