@@ -80,7 +80,6 @@
     var outstanding = 0, i, opts = '<option value="">Choose a service</option>';
 
     document.getElementById("bookingCount").innerHTML = data.bookings.length;
-    document.getElementById("customerCount").innerHTML = data.customers.length;
     document.getElementById("invoiceCount").innerHTML = data.invoices.length;
 
     for (i = 0; i < data.invoices.length; i++) {

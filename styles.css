@@ -4,8 +4,8 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background: #f4f6fa;
-  color: #172033;
+  background: #fff7f8;
+  color: #442B35;
   font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   -webkit-text-size-adjust: 100%;
 }
@@ -16,7 +16,7 @@ button, input, select { font-family: inherit; font-size: 16px; }
 
 #topbar {
   background: #ffffff;
-  border-bottom: 1px solid #e3e7ee;
+  border-bottom: 1px solid #f2d7db;
   padding: 16px 20px;
   overflow: hidden;
 }
@@ -25,7 +25,29 @@ button, input, select { font-family: inherit; font-size: 16px; }
 #topbar .blue-button { float: right; }
 
 .app-title { font-size: 24px; font-weight: bold; margin-top: 3px; }
-.small-label { color: #1d4ed8; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+.small-label { color: #e95f70; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+
+.brand-wrap { overflow: hidden; }
+.brand-mark {
+  float: left;
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  border-radius: 50%;
+  background: #ff8f87;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 16px;
+  margin-right: 11px;
+}
+.brand-copy { float: left; padding-top: 2px; }
+.brand-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #442B35;
+  line-height: 1.15;
+}
 
 #content {
   max-width: 1000px;
@@ -38,23 +60,23 @@ button, input, select { font-family: inherit; font-size: 16px; }
 
 .panel, .card, .stat {
   background: #ffffff;
-  border: 1px solid #e3e7ee;
+  border: 1px solid #f2d7db;
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
 }
 
 .hero h1 { margin: 7px 0; }
-.hero p { color: #667085; margin-bottom: 0; }
+.hero p { color: #8a6670; margin-bottom: 0; }
 
 .stats { overflow: hidden; margin-left: -6px; margin-right: -6px; }
 .stat {
   float: left;
-  width: 23%;
+  width: 31.333%;
   margin: 1%;
   min-height: 90px;
 }
-.stat span { display: block; color: #667085; font-size: 13px; }
+.stat span { display: block; color: #8a6670; font-size: 13px; }
 .stat strong { display: block; font-size: 23px; margin-top: 8px; }
 
 .section-head { overflow: hidden; margin-bottom: 12px; }
@@ -66,7 +88,7 @@ button, input, select { font-family: inherit; font-size: 16px; }
 .card-left { float: left; width: 68%; }
 .card-right { float: right; width: 30%; text-align: right; }
 .card-title { font-size: 17px; font-weight: bold; }
-.card-sub { color: #667085; margin-top: 4px; }
+.card-sub { color: #8a6670; margin-top: 4px; }
 .card-meta { margin-top: 9px; font-weight: bold; font-size: 14px; }
 .amount { font-weight: bold; }
 
@@ -75,19 +97,19 @@ button, input, select { font-family: inherit; font-size: 16px; }
   margin-top: 9px;
   padding: 5px 9px;
   border-radius: 12px;
-  background: #e8efff;
-  color: #1d4ed8;
+  background: #ffe5e8;
+  color: #e95f70;
   font-size: 12px;
   font-weight: bold;
 }
-.badge.paid { background: #dcfce7; color: #15803d; }
-.badge.unpaid { background: #fef3c7; color: #b45309; }
-.badge.overdue { background: #fee2e2; color: #b91c1c; }
+.badge.paid { background: #e9f7ef; color: #3f8f67; }
+.badge.unpaid { background: #fff0dc; color: #c46b2d; }
+.badge.overdue { background: #ffe3e3; color: #c84b4b; }
 
 .blue-button {
   border: 0;
   border-radius: 10px;
-  background: #1d4ed8;
+  background: #ff7f73;
   color: #ffffff;
   padding: 11px 14px;
   font-weight: bold;
@@ -99,7 +121,7 @@ button, input, select { font-family: inherit; font-size: 16px; }
   left: 0; right: 0; bottom: 0;
   height: 64px;
   background: #ffffff;
-  border-top: 1px solid #e3e7ee;
+  border-top: 1px solid #f2d7db;
   z-index: 10;
   white-space: nowrap;
 }
@@ -109,11 +131,11 @@ button, input, select { font-family: inherit; font-size: 16px; }
   height: 64px;
   border: 0;
   background: #ffffff;
-  color: #667085;
+  color: #8a6670;
   font-weight: bold;
   font-size: 13px;
 }
-.nav.active { background: #e8efff; color: #1d4ed8; }
+.nav.active { background: #ffe5e8; color: #e95f70; }
 
 .hidden { display: none !important; }
 
@@ -154,14 +176,14 @@ input, select {
   width: 100%;
   margin-top: 6px;
   padding: 12px;
-  border: 1px solid #d7dce5;
+  border: 1px solid #efcfd4;
   border-radius: 8px;
   background: #ffffff;
 }
 
 @media screen and (max-width: 760px) {
   #topbar .blue-button { display: none; }
-  .stat { width: 48%; }
+  .stat { width: 31.333%; }
   .card-left, .card-right { float: none; width: 100%; text-align: left; }
   .card-right { margin-top: 10px; }
 }
