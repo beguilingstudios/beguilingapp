@@ -36,10 +36,14 @@
     ]
   };
 
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
   function safe(value) {
-    var d = document.createElement("div");
-    d.appendChild(document.createTextNode(value == null ? "" : String(value)));
-    return d.innerHTML;
+    var div = document.createElement("div");
+    div.appendChild(document.createTextNode(value == null ? "" : String(value)));
+    return div.innerHTML;
   }
 
   function showPage(name) {
@@ -50,147 +54,149 @@
       pages[i].className = "page";
     }
 
-    document.getElementById("page-" + name).className = "page active";
+    byId("page-" + name).className = "page active";
     window.scrollTo(0, 0);
   }
 
   function openModal(id) {
-    document.getElementById("shade").className = "";
-    document.getElementById(id).className = "modal";
+    byId("shade").className = "";
+    byId(id).className = "modal";
   }
 
   function closeModal(id) {
-    document.getElementById(id).className = "modal hidden";
-    document.getElementById("shade").className = "hidden";
+    byId(id).className = "modal hidden";
+    byId("shade").className = "hidden";
   }
 
   function closeAllModals() {
-    closeModal("bookingModal");
-    closeModal("quoteModal");
+    byId("bookingModal").className = "modal hidden";
+    byId("quoteModal").className = "modal hidden";
+    byId("shade").className = "hidden";
   }
 
-  function showPromoPackages(category) {
-    var packages = promoPackages[category] || [];
-    var html = "";
+  function attachPackageButtons() {
+    var buttons = document.getElementsByClassName("package-action");
     var i;
-    var buttonLabel;
 
-    document.getElementById("promoPageTitle").innerHTML = safe(category);
-
-    document.getElementById("promoPageIntro").innerHTML =
-      category === "Wedding"
-        ? "Choose a wedding promo package or request a personalised quote."
-        : "Choose the promo package you would like to book.";
-
-    for (i = 0; i < packages.length; i++) {
-      buttonLabel = packages[i].type === "quote"
-        ? "GET A PERSONALISED QUOTE"
-        : "BOOK NOW";
-
-      html += '<div class="package-card">' +
-        '<h2>' + safe(packages[i].name) + '</h2>' +
-        (packages[i].price
-          ? '<div class="package-price">' + safe(packages[i].price) + '</div>'
-          : '') +
-        '<p class="package-note">' + safe(packages[i].note) + '</p>' +
-        '<button class="package-action"' +
-          ' data-category="' + safe(category) + '"' +
-          ' data-package="' + safe(packages[i].name) + '"' +
-          ' data-amount="' + safe(packages[i].amount) + '"' +
-          ' data-type="' + safe(packages[i].type) + '">' +
-          buttonLabel +
-        '</button>' +
-      '</div>';
-    }
-
-    document.getElementById("promoPackageList").innerHTML = html;
-    showPage("promos");
-
-    var actions = document.getElementsByClassName("package-action");
-
-    for (i = 0; i < actions.length; i++) {
-      actions[i].onclick = function () {
-        var actionType = this.getAttribute("data-type");
+    for (i = 0; i < buttons.length; i++) {
+      buttons[i].onclick = function () {
+        var type = this.getAttribute("data-type");
         var packageName = this.getAttribute("data-package");
         var amount = this.getAttribute("data-amount");
 
-        if (actionType === "quote") {
+        if (type === "quote") {
           openModal("quoteModal");
           return;
         }
 
-        document.getElementById("bookingPackage").value = packageName;
-        document.getElementById("bookingAmount").value = amount;
-
-        document.getElementById("selectedPackageSummary").innerHTML =
-          '<strong>' + safe(packageName) + '</strong>' +
-          '<span>R ' + Number(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '</span>';
+        byId("bookingPackage").value = packageName;
+        byId("bookingAmount").value = amount;
+        byId("selectedPackageSummary").innerHTML =
+          "<strong>" + safe(packageName) + "</strong>" +
+          "<span>R " + Number(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</span>";
 
         openModal("bookingModal");
       };
     }
   }
 
-  function addListeners() {
-    var promoChoices = document.getElementsByClassName("promo-choice");
-    var closeButtons = document.getElementsByClassName("close");
+  function showPromoPackages(category) {
+    var packages = promoPackages[category];
+    var html = "";
     var i;
+    var buttonText;
 
-    for (i = 0; i < promoChoices.length; i++) {
-      promoChoices[i].onclick = function () {
-        showPromoPackages(this.getAttribute("data-promo"));
-      };
+    byId("promoPageTitle").innerHTML = safe(category);
+
+    if (category === "Wedding") {
+      byId("promoPageIntro").innerHTML =
+        "Choose a wedding promo package or request a personalised quote.";
+    } else {
+      byId("promoPageIntro").innerHTML =
+        "Choose the promo package you would like to book.";
     }
 
-    document.getElementById("backToHome").onclick = function () {
-      showPage("home");
-    };
+    for (i = 0; i < packages.length; i++) {
+      if (packages[i].type === "quote") {
+        buttonText = "GET A PERSONALISED QUOTE";
+      } else {
+        buttonText = "BOOK NOW";
+      }
 
-    for (i = 0; i < closeButtons.length; i++) {
-      closeButtons[i].onclick = function () {
-        closeModal(this.getAttribute("data-modal"));
-      };
+      html += '<div class="package-card">';
+      html += '<h2>' + safe(packages[i].name) + '</h2>';
+
+      if (packages[i].price !== "") {
+        html += '<div class="package-price">' + safe(packages[i].price) + '</div>';
+      }
+
+      html += '<p class="package-note">' + safe(packages[i].note) + '</p>';
+      html += '<button type="button" class="package-action"';
+      html += ' data-package="' + safe(packages[i].name) + '"';
+      html += ' data-amount="' + safe(packages[i].amount) + '"';
+      html += ' data-type="' + safe(packages[i].type) + '">';
+      html += buttonText;
+      html += '</button>';
+      html += '</div>';
     }
 
-    document.getElementById("shade").onclick = function () {
-      closeAllModals();
-    };
-
-    document.getElementById("bookingForm").onsubmit = function (event) {
-      event.preventDefault();
-
-      var packageName = document.getElementById("bookingPackage").value;
-      var name = document.getElementById("bookingCustomer").value;
-
-      alert(
-        "Thank you, " + name +
-        ". Your request for " + packageName +
-        " has been captured. We will connect this form to your live booking system next."
-      );
-
-      this.reset();
-      closeModal("bookingModal");
-      showPage("home");
-      return false;
-    };
-
-    document.getElementById("quoteForm").onsubmit = function (event) {
-      event.preventDefault();
-
-      var name = document.getElementById("quoteName").value;
-
-      alert(
-        "Thank you, " + name +
-        ". Your personalised wedding quote request has been captured. We will connect this form to your live system next."
-      );
-
-      this.reset();
-      closeModal("quoteModal");
-      showPage("home");
-      return false;
-    };
+    byId("promoPackageList").innerHTML = html;
+    showPage("promos");
+    attachPackageButtons();
   }
 
-  addListeners();
+  byId("matricButton").onclick = function () {
+    showPromoPackages("Matric Dance");
+  };
+
+  byId("weddingButton").onclick = function () {
+    showPromoPackages("Wedding");
+  };
+
+  byId("backToHome").onclick = function () {
+    showPage("home");
+  };
+
+  byId("closeBooking").onclick = function () {
+    closeModal("bookingModal");
+  };
+
+  byId("closeQuote").onclick = function () {
+    closeModal("quoteModal");
+  };
+
+  byId("shade").onclick = function () {
+    closeAllModals();
+  };
+
+  byId("bookingForm").onsubmit = function (event) {
+    event.preventDefault();
+
+    alert(
+      "Thank you, " + byId("bookingCustomer").value +
+      ". Your booking request for " + byId("bookingPackage").value +
+      " has been captured."
+    );
+
+    this.reset();
+    closeModal("bookingModal");
+    showPage("home");
+    return false;
+  };
+
+  byId("quoteForm").onsubmit = function (event) {
+    event.preventDefault();
+
+    alert(
+      "Thank you, " + byId("quoteName").value +
+      ". Your personalised wedding quote request has been captured."
+    );
+
+    this.reset();
+    closeModal("quoteModal");
+    showPage("home");
+    return false;
+  };
+
   showPage("home");
 })();

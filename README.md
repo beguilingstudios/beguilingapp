@@ -1,26 +1,15 @@
-# Beguiling Studios Customer Booking App v5
+# Beguiling Studios Booking App v5.1
 
-Customer-only flow for iOS 12-safe Safari.
+Fixed customer-only build.
 
-## Pages included
+This version contains only:
 - Home
-- Matric Dance / Wedding choice
-- Promo Packages
-- Book Now form
-- Personalised Wedding Quote form
+- Matric Dance
+- Wedding
+- Promo packages
+- Booking request form
+- Personalised wedding quote form
 
-## Removed
-- Bottom tabs
-- Bookings admin page
-- Customers admin page
-- Invoices admin page
-- More/admin page
+No bottom navigation or admin pages.
 
-## Upload to GitHub Pages
-Replace the existing repository files with:
-- index.html
-- styles.css
-- app.js
-- README.md
-
-Then commit the changes.
+Upload index.html, styles.css and app.js to the root of your GitHub Pages repository.
