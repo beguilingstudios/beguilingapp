@@ -65,12 +65,15 @@ a {
 }
 
 .home-wrap {
-  margin-top: 34px;
+  margin-top: 44px;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 h1 {
-  font-size: 34px;
-  margin: 7px 0 8px;
+  font-size: 38px;
+  margin: 8px 0 10px;
 }
 
 .intro {
@@ -84,39 +87,44 @@ h1 {
   position: relative;
   display: block;
   width: 100%;
-  min-height: 132px;
-  margin-bottom: 18px;
-  padding: 25px 62px 25px 25px;
-  border-radius: 18px;
+  height: 180px;
+  margin-bottom: 22px;
+  padding: 34px 80px 30px 30px;
+  border-radius: 24px;
   color: #ffffff;
+  overflow: hidden;
 }
 
 .matric {
-  background: #f06b82;
+  background: #ef6f86;
 }
 
 .wedding {
-  background: #ff8877;
+  background: #ff8a78;
 }
 
 .choice-title {
   display: block;
-  font-size: 27px;
+  font-size: 36px;
+  line-height: 1.1;
   font-weight: bold;
+  color: #ffffff;
 }
 
 .choice-sub {
   display: block;
-  margin-top: 10px;
-  font-size: 15px;
+  margin-top: 14px;
+  font-size: 18px;
+  line-height: 1.35;
   color: #ffffff;
 }
 
 .choice-arrow {
   position: absolute;
-  right: 24px;
-  top: 39px;
-  font-size: 42px;
+  right: 28px;
+  top: 54px;
+  font-size: 58px;
+  line-height: 58px;
   color: #ffffff;
 }
 
@@ -219,14 +227,30 @@ textarea {
 
 @media screen and (max-width: 760px) {
   .home-wrap {
-    margin-top: 22px;
+    margin-top: 26px;
   }
 
   h1 {
-    font-size: 29px;
+    font-size: 31px;
   }
 
   .big-choice {
-    min-height: 120px;
+    height: 160px;
+    padding: 30px 70px 26px 24px;
+    border-radius: 20px;
+  }
+
+  .choice-title {
+    font-size: 31px;
+  }
+
+  .choice-sub {
+    font-size: 16px;
+  }
+
+  .choice-arrow {
+    right: 22px;
+    top: 46px;
+    font-size: 52px;
   }
 }

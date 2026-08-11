@@ -15,3 +15,6 @@ Upload ALL files to the root of your GitHub Pages repository:
 - thank-you-quote.html
 
 This is intentionally built for maximum compatibility with Safari on iOS 12.
+
+
+v6.1: Restyled home choices as large full-width buttons.
