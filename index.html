@@ -1125,7 +1125,7 @@ var EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
 var EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
 
 /*
-  GOOGLE PLACES + DISTANCE SETUP
+  GOOGLE PLACES + ROUTES DISTANCE SETUP
   These point to your Supabase project. The Google API key stays securely
   inside the Supabase Edge Function and is never exposed in the browser.
 */
@@ -1638,6 +1638,16 @@ function createGoogleMapsUrl(query) {
 var placesTimer = null;
 var currentPlacesRequest = 0;
 var selectedVenueConfirmed = false;
+var placesSessionToken = createPlacesSessionToken();
+
+function createPlacesSessionToken() {
+  var d = new Date().getTime();
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (d + Math.random() * 16) % 16 | 0;
+    d = Math.floor(d / 16);
+    return (c === "x" ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
 
 function supabaseFunctionUrl() {
   return SUPABASE_URL.replace(/\/+$/, "") + "/functions/v1/" + GOOGLE_PLACES_FUNCTION;
@@ -1645,6 +1655,8 @@ function supabaseFunctionUrl() {
 
 function googlePlacesConfigured() {
   return (
+    SUPABASE_URL &&
+    SUPABASE_ANON_KEY &&
     SUPABASE_URL !== "YOUR_SUPABASE_URL" &&
     SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY"
   );
@@ -1669,15 +1681,24 @@ function postToPlacesFunction(payload, callback) {
       try {
         callback(null, JSON.parse(xhr.responseText));
       } catch (e) {
-        callback(new Error("Invalid response from Places service."));
+        callback(new Error("Invalid response from Google Maps service."));
       }
     } else {
-      callback(new Error("Places request failed (" + xhr.status + ")."));
+      var message = "Google Maps request failed (" + xhr.status + ").";
+
+      try {
+        var errorData = JSON.parse(xhr.responseText);
+        if (errorData && errorData.error) {
+          message = errorData.error;
+        }
+      } catch (ignore) {}
+
+      callback(new Error(message));
     }
   };
 
   xhr.onerror = function () {
-    callback(new Error("Network error while contacting Places service."));
+    callback(new Error("Network error while contacting Google Maps service."));
   };
 
   xhr.send(JSON.stringify(payload));
@@ -1706,37 +1727,71 @@ function showPlaceSuggestions(items) {
 
   if (!items || !items.length) {
     closePlaceSuggestions();
+    document.getElementById("venueHelp").innerHTML =
+      "No matching Google Places results found.";
     return;
   }
 
   var i;
+
   for (i = 0; i < items.length; i++) {
-    var item = items[i];
-    var button = document.createElement("button");
-    button.type = "button";
-    button.className = "place-suggestion";
-    button.setAttribute("data-place-id", item.placeId);
-    button.setAttribute("data-place-name", item.mainText || "");
-    button.setAttribute("data-place-address", item.secondaryText || "");
-    button.innerHTML =
-      "<strong>" + escapeHtml(item.mainText || item.text || "") + "</strong>" +
-      "<span>" + escapeHtml(item.secondaryText || "") + "</span>";
+    (function (item) {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "place-suggestion";
+      button.setAttribute("data-place-id", item.placeId || "");
+      button.setAttribute("data-full-text", item.fullText || "");
+      button.setAttribute("data-main-text", item.mainText || "");
+      button.setAttribute("data-secondary-text", item.secondaryText || "");
 
-    button.onclick = function () {
-      selectGooglePlace(
-        this.getAttribute("data-place-id"),
-        this.getAttribute("data-place-name"),
-        this.getAttribute("data-place-address")
-      );
-    };
+      button.innerHTML =
+        "<strong>" +
+        escapeHtml(item.mainText || item.fullText || "") +
+        "</strong>" +
+        "<span>" +
+        escapeHtml(item.secondaryText || "") +
+        "</span>";
 
-    box.appendChild(button);
+      var touchHandled = false;
+
+      function chooseSuggestion(event) {
+        if (event && event.preventDefault) {
+          event.preventDefault();
+        }
+
+        selectGooglePlace(
+          button.getAttribute("data-place-id"),
+          button.getAttribute("data-full-text"),
+          button.getAttribute("data-main-text"),
+          button.getAttribute("data-secondary-text")
+        );
+      }
+
+      // iOS 12 Safari: use touchend as well as click.
+      button.addEventListener("touchend", function (event) {
+        touchHandled = true;
+        chooseSuggestion(event);
+
+        window.setTimeout(function () {
+          touchHandled = false;
+        }, 500);
+      }, false);
+
+      button.addEventListener("click", function (event) {
+        if (!touchHandled) {
+          chooseSuggestion(event);
+        }
+      }, false);
+
+      box.appendChild(button);
+    })(items[i]);
   }
 
   var attribution = document.createElement("div");
   attribution.className = "google-attribution";
   attribution.innerHTML = "Powered by Google";
   box.appendChild(attribution);
+
   box.className = "places-suggestions open";
 }
 
@@ -1745,96 +1800,116 @@ function searchGooglePlaces(query) {
   var requestNumber = currentPlacesRequest;
 
   postToPlacesFunction(
-    { action: "autocomplete", input: query },
+    {
+      action: "autocomplete",
+      input: query,
+      sessionToken: placesSessionToken
+    },
     function (error, data) {
       if (requestNumber !== currentPlacesRequest) return;
 
       if (error) {
         closePlaceSuggestions();
         document.getElementById("venueHelp").innerHTML =
-          "Google Places search is unavailable. Check the setup.";
+          "Google Places search is unavailable: " + escapeHtml(error.message);
         return;
       }
 
-      showPlaceSuggestions(data.predictions || []);
+      showPlaceSuggestions(data && data.suggestions ? data.suggestions : []);
     }
   );
 }
 
-function selectGooglePlace(placeId, fallbackName, fallbackAddress) {
+function selectGooglePlace(placeId, fullText, mainText, secondaryText) {
   closePlaceSuggestions();
-  document.getElementById("venueHelp").innerHTML = "Calculating travel distance...";
 
-  postToPlacesFunction(
-    { action: "place_details", placeId: placeId },
-    function (error, data) {
-      if (error || !data || !data.place) {
-        document.getElementById("venueHelp").innerHTML =
-          "Could not load that venue. Please choose another result.";
-        clearPlaceSelection();
-        return;
-      }
+  if (!placeId) {
+    clearPlaceSelection();
+    document.getElementById("venueHelp").innerHTML =
+      "That Google Places result did not contain a Place ID.";
+    return;
+  }
 
-      var place = data.place;
-      selectedVenueConfirmed = true;
+  selectedVenueConfirmed = true;
 
-      document.getElementById("clientVenue").value =
-        place.name ? place.name + (place.formattedAddress ? ", " + place.formattedAddress : "") :
-        place.formattedAddress;
+  var displayText = fullText || mainText || secondaryText || "Selected venue";
 
-      document.getElementById("selectedPlaceId").value = place.placeId || placeId;
-      document.getElementById("selectedVenueLat").value = place.latitude || "";
-      document.getElementById("selectedVenueLng").value = place.longitude || "";
-      document.getElementById("googleMapsLink").value = place.googleMapsUri || "";
+  document.getElementById("clientVenue").value = displayText;
+  document.getElementById("selectedPlaceId").value = placeId;
 
-      document.getElementById("selectedVenueName").innerHTML =
-        escapeHtml(place.name || fallbackName || "Selected venue");
-      document.getElementById("selectedVenueAddress").innerHTML =
-        escapeHtml(place.formattedAddress || fallbackAddress || "");
-      document.getElementById("selectedVenueDistance").innerHTML =
-        "Calculating distance...";
-      document.getElementById("selectedVenueCard").style.display = "block";
+  // The current Edge Function does not need latitude/longitude.
+  document.getElementById("selectedVenueLat").value = "";
+  document.getElementById("selectedVenueLng").value = "";
 
-      calculateVenueDistance(place.placeId || placeId);
-    }
-  );
+  document.getElementById("googleMapsLink").value =
+    "https://www.google.com/maps/search/?api=1&query_place_id=" +
+    encodeURIComponent(placeId);
+
+  document.getElementById("selectedVenueName").innerHTML =
+    escapeHtml(mainText || displayText);
+
+  document.getElementById("selectedVenueAddress").innerHTML =
+    escapeHtml(secondaryText || displayText);
+
+  document.getElementById("selectedVenueDistance").innerHTML =
+    "Calculating driving distance...";
+
+  document.getElementById("selectedVenueCard").style.display = "block";
+  document.getElementById("venueHelp").innerHTML =
+    "Venue selected. Calculating travel distance...";
+
+  calculateVenueDistance(placeId);
+
+  // Start a new autocomplete billing/search session after a venue is selected.
+  placesSessionToken = createPlacesSessionToken();
 }
 
 function calculateVenueDistance(placeId) {
   postToPlacesFunction(
-    { action: "distance", placeId: placeId },
+    {
+      action: "route",
+      placeId: placeId
+    },
     function (error, data) {
       if (error || !data) {
         document.getElementById("selectedVenueDistance").innerHTML =
           "Distance could not be calculated.";
+
         document.getElementById("venueHelp").innerHTML =
-          "Venue selected, but travel distance is unavailable.";
+          "Venue selected, but travel distance is unavailable: " +
+          escapeHtml(error ? error.message : "Unknown error");
+
         return;
       }
 
-      var km = data.distanceKm;
+      var km = Number(data.distanceKm);
       var duration = data.durationText || "";
 
-      document.getElementById("travelDistanceKm").value =
-        typeof km === "number" ? km.toFixed(1) : "";
+      if (!isNaN(km)) {
+        document.getElementById("travelDistanceKm").value = km.toFixed(1);
+      } else {
+        document.getElementById("travelDistanceKm").value = "";
+      }
+
       document.getElementById("travelDuration").value = duration;
 
       document.getElementById("selectedVenueDistance").innerHTML =
-        (typeof km === "number" ? km.toFixed(1) + " km" : "Distance unavailable") +
+        (!isNaN(km) ? km.toFixed(1) + " km" : "Distance unavailable") +
         (duration ? " · approx. " + escapeHtml(duration) : "");
 
       document.getElementById("venueHelp").innerHTML =
-        "Venue selected from Google Places and travel distance calculated.";
+        "Venue selected from Google Places and driving distance calculated.";
     }
   );
 }
 
 document.getElementById("clientVenue").addEventListener("input", function () {
   var query = this.value.replace(/^\s+|\s+$/g, "");
+
   clearPlaceSelection();
 
   if (placesTimer) {
-    clearTimeout(placesTimer);
+    window.clearTimeout(placesTimer);
   }
 
   if (query.length < 3) {
@@ -1844,29 +1919,46 @@ document.getElementById("clientVenue").addEventListener("input", function () {
     return;
   }
 
-  document.getElementById("venueHelp").innerHTML = "Searching Google Places...";
+  document.getElementById("venueHelp").innerHTML =
+    "Searching Google Places...";
 
-  placesTimer = setTimeout(function () {
+  placesTimer = window.setTimeout(function () {
     searchGooglePlaces(query);
-  }, 350);
+  }, 450);
 });
 
+document.getElementById("clientVenue").addEventListener("focus", function () {
+  var query = this.value.replace(/^\s+|\s+$/g, "");
+
+  if (query.length >= 3 && !selectedVenueConfirmed) {
+    searchGooglePlaces(query);
+  }
+});
+
+document.addEventListener("click", function (event) {
+  var box = document.getElementById("placesSuggestions");
+  var wrap = document.querySelector(".places-search-wrap");
+
+  if (box && wrap && !wrap.contains(event.target)) {
+    closePlaceSuggestions();
+  }
+}, false);
+
 document.getElementById("clientDetailsForm").addEventListener("submit", function (event) {
+  event.preventDefault();
+
   if (!selectedVenueConfirmed) {
-    event.preventDefault();
     setEmailStatus(
       "Please choose the venue from the Google Places suggestions so the travel distance can be calculated.",
       "error"
     );
     document.getElementById("clientVenue").focus();
+    return;
   }
-});
 
-
-document.getElementById("clientDetailsForm").addEventListener("submit", function (event) {
-  event.preventDefault();
   sendQuoteEmail();
 });
+
 
 function updateContactLinks(message) {
   var encoded = encodeURIComponent(message);
