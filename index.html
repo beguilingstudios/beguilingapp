@@ -916,14 +916,14 @@ a {
         <div class="logo-mark" aria-label="Beguiling Studios logo"></div>
         <div>
           <h1>Beguiling Studios</h1>
-          <p>LEAVING HEARTS EVER BEGUILED</p>
+          <p>Beauty for your special day</p>
         </div>
       </div>
 
       <div class="hero-card">
         <p class="eyebrow">WELCOME TO</p>
         <h2>Beguiling Studios</h2>
-        <p class="hero-copy"></p>
+        <p class="hero-copy">Choose your occasion and build the perfect beauty package.</p>
         <button class="primary-btn" data-go="occasionScreen">Touch to start</button>
       </div>
     </section>
@@ -1148,6 +1148,10 @@ a {
 <script>
 var screens = Array.prototype.slice.call(document.querySelectorAll(".screen"));
 
+try {
+  window.localStorage.removeItem("beguilingLastVenue");
+} catch (error) {}
+
 var state = {
   occasion: "",
   customFrom: "Wedding",
@@ -1187,6 +1191,7 @@ function showScreen(id) {
   });
 
   window.scrollTo(0, 0);
+
 }
 
 function findParentWithAttribute(element, attributeName) {
@@ -1805,9 +1810,11 @@ function sendQuoteEmail() {
         document.getElementById("submitSuccessCard").style.display = "none";
         document.getElementById("submitQuoteNumber").innerHTML = "";
 
-        if (typeof resetVenueSelection === "function") {
-          resetVenueSelection();
-        }
+        // Clear the previous client's venue and route data completely.
+        clearPlaceSelection();
+        document.getElementById("clientVenue").value = "";
+        document.getElementById("venueHelp").innerHTML =
+          "Start typing and choose a Google Places result.";
 
         showScreen("homeScreen");
         window.scrollTo(0, 0);
@@ -2112,6 +2119,7 @@ function calculateVenueDistance(placeId) {
 
       document.getElementById("venueHelp").innerHTML =
         "Venue selected from Google Places and driving distance calculated.";
+
     }
   );
 }
