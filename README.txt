@@ -1,21 +1,32 @@
-Beguiling Studios pricing + logo update
+Beguiling Studios - Live Submit Connection
 
-Files:
-- index.html
-  Updated website with the supplied Beguiling Studios logo embedded directly in the HTML.
-  No separate image request is required when GitHub Pages loads the site.
+1. Run pricing-package-additions.sql in Supabase SQL Editor.
+   This adds the Matric R1,200 package and Wedding Promo 2 R14,700,
+   and verifies Wedding Promo 1 R6,000.
 
-- logo.jpeg
-  Original supplied logo.
+2. Replace the current GitHub Pages index.html with the included index.html.
 
-- supabase/pricing.sql
-  Creates and seeds the service_pricing table in Supabase.
+3. The website now sends directly to:
+   Supabase Edge Function: send-quote
 
-- Beguiling_Studios_Branded_Quote_Sample.pdf
-  Example of the logo applied to the quote PDF.
+4. The browser no longer uses EmailJS.
 
-IMPORTANT:
-A few names in the screenshot were visually truncated. Those rows are marked
-needs_confirmation = true in the database so we do not silently guess the service wording.
+5. The website sends:
+   - client name / surname
+   - client email
+   - cellphone
+   - selected Google Places venue
+   - one-way Google Routes distance
+   - secure pricing service codes and quantities
 
-Travel has been entered as R8/km with the description "studio to venue and back (x2)".
+6. Supabase then:
+   - reads prices from service_pricing
+   - doubles the route distance for return travel
+   - charges the database travel rate
+   - generates the branded PDF
+   - emails the quote through Gmail
+
+Personalised quote note:
+Some source price-list entries were visually ambiguous. The website intentionally
+blocks combinations where the exact rate has not yet been confirmed instead of
+guessing a price.

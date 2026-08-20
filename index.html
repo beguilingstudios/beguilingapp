@@ -892,6 +892,21 @@ a {
   }
 }
 
+
+.submit-success-card {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.submit-success-card h3 {
+  margin-bottom: 8px;
+  color: var(--pink-dark);
+}
+
+.submit-success-card p {
+  margin: 5px 0;
+}
+
 </style>
 </head>
 <body>
@@ -1072,8 +1087,8 @@ a {
       <div class="summary-card" id="summaryContent"></div>
 
       <form id="clientDetailsForm" class="quote-card client-details-card">
-        <h3>Client details</h3>
-        <p class="form-intro">Enter the client's details before sending the quote.</p>
+        <h3>Your details</h3>
+        <p class="form-intro">Enter your details and venue, then tap Submit to receive your quote by email.</p>
 
         <div class="field-row">
           <div class="field-group">
@@ -1122,6 +1137,12 @@ a {
         <button type="submit" id="sendQuoteBtn" class="primary-btn full-width">Submit</button>
         <div id="emailStatus" class="email-status" aria-live="polite"></div>
       </form>
+
+      <div id="submitSuccessCard" class="summary-card submit-success-card" style="display:none;">
+        <h3>Thank you!</h3>
+        <p>Your Beguiling Studios quote has been emailed to you.</p>
+        <p id="submitQuoteNumber" class="muted"></p>
+      </div>
     </section>
   </main>
 <script>
@@ -1140,21 +1161,8 @@ var state = {
   }
 };
 
-// Change these before publishing:
-var BUSINESS_WHATSAPP = "27XXXXXXXXX";
-var BUSINESS_EMAIL = "YOUR_EMAIL_ADDRESS";
-
-/*
-  EMAIL SENDING SETUP
-  Create an EmailJS account, connect the email address you want quotes sent FROM,
-  then replace the three values below.
-
-  In the EmailJS template, set the recipient / To Email field to:
-  {{to_email}}
-*/
-var EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
-var EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
-var EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+// Supabase functions used by the website.
+var SEND_QUOTE_FUNCTION = "send-quote";
 
 /*
   GOOGLE PLACES + ROUTES DISTANCE SETUP
@@ -1574,57 +1582,192 @@ function setEmailStatus(message, className) {
   status.innerHTML = message;
 }
 
-function emailConfigIsReady() {
-  return (
-    EMAILJS_SERVICE_ID !== "YOUR_SERVICE_ID" &&
-    EMAILJS_TEMPLATE_ID !== "YOUR_TEMPLATE_ID" &&
-    EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY" &&
-    BUSINESS_EMAIL !== "YOUR_EMAIL_ADDRESS"
-  );
+function sendQuoteFunctionUrl() {
+  return SUPABASE_URL.replace(/\/+$/, "") + "/functions/v1/" + SEND_QUOTE_FUNCTION;
+}
+
+function addQuoteItem(items, code, quantity) {
+  var qty = Number(quantity || 0);
+
+  if (qty > 0) {
+    items.push({
+      code: code,
+      quantity: qty
+    });
+  }
+}
+
+function buildSendQuoteItems() {
+  var selection = state.selection || {};
+  var items = [];
+
+  /*
+    Fixed packages.
+    These codes are looked up securely in Supabase.
+  */
+  if (selection.type === "package") {
+    if (selection.name === "Matric Dance Promo") {
+      addQuoteItem(items, "matric_promo_1200", 1);
+      return { items: items, error: "" };
+    }
+
+    if (selection.name === "Wedding Promo 1") {
+      addQuoteItem(items, "wedding_promo_6000", 1);
+      return { items: items, error: "" };
+    }
+
+    if (selection.name === "Wedding Promo 2") {
+      addQuoteItem(items, "wedding_promo_14700", 1);
+      return { items: items, error: "" };
+    }
+
+    return {
+      items: [],
+      error: "This package has not been connected to the pricing database yet."
+    };
+  }
+
+  /*
+    Personalised wedding quote.
+
+    We only use combinations for which the uploaded price list gives us a
+    definite database price. This prevents the browser from inventing prices.
+
+    Bride:
+      Makeup only -> bridal_makeup
+      Makeup + Hair -> bridal_makeup_hair
+
+    Bridesmaids:
+      Makeup + Hair together -> bridesmaids_1500
+
+    Mother:
+      Makeup + Hair together -> mother_1200
+
+    Flower Girl / Granny:
+      Hair -> flowergirl_hair
+
+    Additional Guest:
+      Hair -> hair_upstyle
+      Makeup -> makeup_700
+
+    Where a user selects a combination that does not yet have an unambiguous
+    pricing row, we stop and ask for that rate to be configured.
+  */
+  if (selection.type === "custom") {
+    var people = selection.people || [];
+    var i;
+
+    for (i = 0; i < people.length; i++) {
+      var person = people[i];
+      var makeup = Number(person.makeup || 0);
+      var hair = Number(person.hair || 0);
+      var label = String(person.label || "");
+
+      if (label === "Bride") {
+        if (makeup > 0 && hair > 0 && makeup === hair) {
+          addQuoteItem(items, "bridal_makeup_hair", makeup);
+        } else if (makeup > 0 && hair === 0) {
+          addQuoteItem(items, "bridal_makeup", makeup);
+        } else if (hair > 0 || makeup !== hair) {
+          return {
+            items: [],
+            error: "Bride hair-only or unequal Bride makeup/hair quantities still need a price configured."
+          };
+        }
+      }
+
+      else if (label === "Bridesmaids") {
+        if (makeup > 0 && hair > 0 && makeup === hair) {
+          addQuoteItem(items, "bridesmaids_1500", makeup);
+        } else if (makeup > 0 || hair > 0) {
+          return {
+            items: [],
+            error: "Bridesmaid makeup-only or hair-only pricing still needs to be confirmed."
+          };
+        }
+      }
+
+      else if (label === "Mother") {
+        if (makeup > 0 && hair > 0 && makeup === hair) {
+          addQuoteItem(items, "mother_1200", makeup);
+        } else if (makeup > 0 || hair > 0) {
+          return {
+            items: [],
+            error: "Mother makeup-only or hair-only pricing still needs to be confirmed."
+          };
+        }
+      }
+
+      else if (label === "Grandmother / Flower Girl") {
+        if (makeup > 0) {
+          return {
+            items: [],
+            error: "Grandmother / Flower Girl makeup pricing still needs to be confirmed."
+          };
+        }
+        addQuoteItem(items, "flowergirl_hair", hair);
+      }
+
+      else if (label === "Additional Guest") {
+        addQuoteItem(items, "makeup_700", makeup);
+        addQuoteItem(items, "hair_upstyle", hair);
+      }
+    }
+
+    if (!items.length) {
+      return {
+        items: [],
+        error: "Please select at least one service."
+      };
+    }
+
+    return { items: items, error: "" };
+  }
+
+  return {
+    items: [],
+    error: "The quote selection could not be prepared."
+  };
 }
 
 function sendQuoteEmail() {
   var client = getClientDetails();
-  var quote = buildQuoteData();
   var sendButton = document.getElementById("sendQuoteBtn");
+  var mapped = buildSendQuoteItems();
 
-  if (!emailConfigIsReady()) {
+  if (mapped.error) {
+    setEmailStatus(mapped.error, "error");
+    return;
+  }
+
+  if (!client.distanceKm) {
     setEmailStatus(
-      "Email sending has not been connected yet. Add your EmailJS Service ID, Template ID, Public Key and your email address in the code.",
+      "The venue distance has not finished calculating yet. Please wait a moment and tap Submit again.",
       "error"
     );
     return;
   }
 
   sendButton.disabled = true;
-  sendButton.innerHTML = "Sending quote...";
-  setEmailStatus("Sending quote to " + client.email + "...", "sending");
+  sendButton.innerHTML = "Submitting...";
+  setEmailStatus("Preparing and emailing your quote...", "sending");
 
-  var data = {
-    service_id: EMAILJS_SERVICE_ID,
-    template_id: EMAILJS_TEMPLATE_ID,
-    user_id: EMAILJS_PUBLIC_KEY,
-    template_params: {
-      to_email: client.email,
-      client_name: client.name,
-      client_surname: client.surname,
-      client_full_name: client.name + " " + client.surname,
-      client_phone: client.phone,
-      venue: client.venue,
-      google_maps_link: client.mapsLink || createGoogleMapsUrl(client.venue),
-      travel_distance: client.distanceKm ? client.distanceKm + " km" : "Not calculated",
-      travel_duration: client.duration || "Not calculated",
-      quote_title: quote.title,
-      quote_price: quote.price,
-      quote_details: quote.details,
-      notes: quote.notes || "None",
-      business_email: BUSINESS_EMAIL
-    }
+  var payload = {
+    clientName: client.name,
+    clientSurname: client.surname,
+    clientEmail: client.email,
+    clientPhone: client.phone,
+    venue: client.venue,
+    distanceKm: Number(client.distanceKm),
+    items: mapped.items,
+    notes: state.selection && state.selection.notes ? state.selection.notes : ""
   };
 
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "https://api.emailjs.com/api/v1.0/email/send", true);
+  xhr.open("POST", sendQuoteFunctionUrl(), true);
   xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.setRequestHeader("Authorization", "Bearer " + SUPABASE_ANON_KEY);
+  xhr.setRequestHeader("apikey", SUPABASE_ANON_KEY);
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState !== 4) return;
@@ -1633,26 +1776,51 @@ function sendQuoteEmail() {
     sendButton.innerHTML = "Submit";
 
     if (xhr.status >= 200 && xhr.status < 300) {
-      setEmailStatus(
-        "Quote sent successfully to <strong>" + escapeHtml(client.email) + "</strong>.",
-        "success"
-      );
+      var result = {};
+
+      try {
+        result = JSON.parse(xhr.responseText);
+      } catch (ignore) {}
+
+      document.getElementById("clientDetailsForm").style.display = "none";
+      document.getElementById("submitSuccessCard").style.display = "block";
+
+      if (result.quoteNumber) {
+        document.getElementById("submitQuoteNumber").innerHTML =
+          "Quote reference: <strong>" + escapeHtml(result.quoteNumber) + "</strong>";
+      }
+
+      setEmailStatus("", "");
+      window.scrollTo(0, 0);
     } else {
-      setEmailStatus(
-        "The quote could not be sent. Please check the EmailJS settings and try again.",
-        "error"
-      );
+      var message = "Your quote could not be submitted. Please try again.";
+
+      try {
+        var errorData = JSON.parse(xhr.responseText);
+        if (errorData && errorData.error) {
+          message = errorData.error;
+        }
+        if (errorData && errorData.details) {
+          message += " " + errorData.details;
+        }
+      } catch (ignore2) {}
+
+      setEmailStatus(escapeHtml(message), "error");
     }
   };
 
   xhr.onerror = function () {
     sendButton.disabled = false;
     sendButton.innerHTML = "Submit";
-    setEmailStatus("Network error while sending the quote. Please try again.", "error");
+    setEmailStatus(
+      "Network error while submitting your quote. Please check your connection and try again.",
+      "error"
+    );
   };
 
-  xhr.send(JSON.stringify(data));
+  xhr.send(JSON.stringify(payload));
 }
+
 
 function escapeHtml(value) {
   var div = document.createElement("div");
