@@ -1091,6 +1091,20 @@ body::after {
   }
 }
 
+
+/* Occasion cards: no decorative star/ring icons */
+.occasion-card .icon,
+.occasion-card .occasion-icon,
+.choice-card .icon,
+.choice-card .occasion-icon {
+  display: none !important;
+}
+
+.occasion-card,
+.choice-card {
+  justify-content: center !important;
+}
+
 </style>
 </head>
 <body>
@@ -1123,13 +1137,11 @@ body::after {
 
       <div class="choice-grid">
         <button class="occasion-card" data-occasion="matric">
-          <span class="card-icon">✨</span>
           <strong>Matric Dance</strong>
           <small>Makeup, hair and travel options</small>
         </button>
 
         <button class="occasion-card" data-occasion="wedding">
-          <span class="card-icon">💍</span>
           <strong>Wedding</strong>
           <small>Bride and bridal party packages</small>
         </button>
