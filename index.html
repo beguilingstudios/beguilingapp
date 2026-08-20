@@ -11,7 +11,681 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=ios12-1" />
+<style>
+:root {
+  --pink: #f6a6ba;
+  --pink-dark: #e97895;
+  --coral: #ff806e;
+  --cream: #fff8f6;
+  --ink: #2d2430;
+  --muted: #7f6f78;
+  --white: #ffffff;
+  --line: #f0d5dc;
+  --shadow: 0 18px 45px rgba(178, 91, 113, 0.14);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff5f7;
+  background:
+    radial-gradient(circle at top left, #ffe9ef 0, transparent 36%),
+    linear-gradient(160deg, #fffdfa 0%, #fff2f5 100%);
+}
+
+button,
+input,
+textarea,
+a {
+  font: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  touch-action: manipulation;
+}
+
+.app-shell {
+  width: 100%;
+  max-width: 780px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.screen {
+  display: none;
+  min-height: calc(100vh - 48px);
+  -webkit-animation: fadeIn .28s ease;
+  animation: fadeIn .28s ease;
+}
+
+.screen.active {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(8px);
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(8px);
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+.brand {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.brand > * + * {
+  margin-left: 12px;
+}
+
+.logo-mark {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  color: white;
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 700;
+  background: #e97895;
+  background: linear-gradient(135deg, var(--pink-dark), var(--coral));
+  box-shadow: var(--shadow);
+}
+
+.brand h1,
+.brand p {
+  margin: 0;
+}
+
+.brand h1 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.18rem;
+}
+
+.brand p {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+.hero-card {
+  margin: auto 0;
+  padding: 42px 28px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,.7);
+  border-radius: 30px;
+  background: rgba(255,255,255,.94);
+  box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.eyebrow {
+  margin: 0 0 7px;
+  color: var(--pink-dark);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+}
+
+.hero-card h2,
+.topbar h2 {
+  font-family: "Playfair Display", Georgia, serif;
+  margin: 0;
+}
+
+.hero-card h2 {
+  font-size: 3rem;
+}
+
+.hero-copy {
+  max-width: 440px;
+  margin: 14px auto 28px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.primary-btn,
+.secondary-btn,
+.text-btn,
+.occasion-card,
+.icon-btn {
+  border: 0;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.primary-btn,
+.secondary-btn {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  min-height: 52px;
+  padding: 13px 22px;
+  border-radius: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  -webkit-transition: -webkit-transform .18s ease, box-shadow .18s ease;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.primary-btn {
+  color: white;
+  background: #e97895;
+  background: linear-gradient(135deg, var(--pink-dark), var(--coral));
+  box-shadow: 0 12px 24px rgba(233, 120, 149, .26);
+}
+
+.secondary-btn {
+  color: var(--pink-dark);
+  background: #fff0f4;
+}
+
+.primary-btn:active,
+.secondary-btn:active,
+.occasion-card:active {
+  -webkit-transform: translateY(1px);
+  transform: translateY(1px);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.topbar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.topbar > * + * {
+  margin-left: 16px;
+}
+
+.icon-btn {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: white;
+  color: var(--ink);
+  box-shadow: 0 8px 20px rgba(50, 30, 40, .08);
+  font-size: 1.3rem;
+}
+
+.choice-grid {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 18px 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 18px;
+  grid-row-gap: 18px;
+  margin: auto 0;
+}
+
+.choice-grid > :nth-child(1) {
+  -ms-grid-column: 1;
+}
+
+.choice-grid > :nth-child(2) {
+  -ms-grid-column: 3;
+}
+
+.occasion-card {
+  min-height: 240px;
+  padding: 28px 22px;
+  border-radius: 28px;
+  color: var(--ink);
+  background: white;
+  box-shadow: var(--shadow);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  text-align: center;
+  -webkit-transition: -webkit-transform .18s ease;
+  transition: transform .18s ease;
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 14px;
+}
+
+.occasion-card strong {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.45rem;
+}
+
+.occasion-card small {
+  margin-top: 9px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.package-list {
+  display: block;
+  padding-bottom: 28px;
+}
+
+.package-list > * + * {
+  margin-top: 18px;
+}
+
+.package-card,
+.quote-card,
+.summary-card {
+  border: 1px solid #f5dce3;
+  border-radius: 24px;
+  background: rgba(255,255,255,.96);
+  box-shadow: var(--shadow);
+}
+
+.package-card {
+  padding: 24px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.package-card > * + * {
+  margin-left: 20px;
+}
+
+.package-card.featured {
+  background: #fff7f9;
+  background: linear-gradient(135deg, #fff 0%, #fff4f7 100%);
+}
+
+.package-card h3 {
+  margin: 9px 0 7px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.45rem;
+}
+
+.package-card p,
+.package-card ul {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.package-card ul {
+  padding-left: 18px;
+  line-height: 1.8;
+}
+
+.muted {
+  font-size: .85rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #ffdbe4;
+  color: #a74c66;
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.badge.light {
+  background: #f8f0f3;
+  color: var(--muted);
+}
+
+.service-toggle {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 18px;
+}
+
+.service-toggle > * + * {
+  margin-left: 12px;
+}
+
+.toggle-pill input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-pill span {
+  display: inline-block;
+  padding: 11px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: white;
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toggle-pill input:checked + span {
+  color: #a54963;
+  background: #ffe8ee;
+  border-color: #f4b6c6;
+}
+
+.quote-card {
+  padding: 18px;
+  margin-bottom: 28px;
+}
+
+.quote-head,
+.person-row {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1.5fr 10px .65fr 10px .65fr;
+  grid-template-columns: 1.5fr .65fr .65fr;
+  grid-column-gap: 10px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.quote-head > :nth-child(1),
+.person-row > :nth-child(1) {
+  -ms-grid-column: 1;
+}
+.quote-head > :nth-child(2),
+.person-row > :nth-child(2) {
+  -ms-grid-column: 3;
+}
+.quote-head > :nth-child(3),
+.person-row > :nth-child(3) {
+  -ms-grid-column: 5;
+}
+
+.quote-head {
+  padding: 9px 4px 12px;
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.person-row {
+  padding: 12px 4px;
+  border-top: 1px solid #f4e4e8;
+}
+
+.person-label strong,
+.person-label small {
+  display: block;
+}
+
+.person-label small {
+  color: var(--muted);
+  font-size: .72rem;
+}
+
+.stepper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.stepper > * + * {
+  margin-left: 6px;
+}
+
+.stepper button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.stepper output {
+  min-width: 18px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.stepper.disabled {
+  opacity: .35;
+  pointer-events: none;
+}
+
+.field-group {
+  margin-top: 20px;
+}
+
+.field-group label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 700;
+  font-size: .85rem;
+}
+
+.field-group input,
+.field-group textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 13px 14px;
+  outline: none;
+  background: #fff;
+  color: var(--ink);
+  font-size: 16px;
+}
+
+.field-group input:focus,
+.field-group textarea:focus {
+  border-color: var(--pink);
+}
+
+.field-group small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+}
+
+.quote-card .primary-btn {
+  margin-top: 22px;
+}
+
+.summary-card {
+  padding: 24px;
+}
+
+.summary-card h3 {
+  margin-top: 0;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.6rem;
+}
+
+.summary-card dl {
+  margin: 0;
+}
+
+.summary-card .summary-line {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-top: 1px solid #f2e2e7;
+}
+
+.summary-card .summary-line > * + * {
+  margin-left: 20px;
+}
+
+.summary-card dt {
+  color: var(--muted);
+}
+
+.summary-card dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 600;
+}
+
+.summary-actions {
+  display: block;
+  margin-top: 18px;
+}
+
+.summary-actions > * {
+  margin-bottom: 12px;
+}
+
+.text-btn {
+  width: 100%;
+  background: transparent;
+  padding: 10px;
+  color: var(--muted);
+}
+
+@media (max-width: 620px) {
+  .app-shell {
+    padding: 16px;
+  }
+
+  .screen {
+    min-height: calc(100vh - 32px);
+  }
+
+  .hero-card h2 {
+    font-size: 2.25rem;
+  }
+
+  .choice-grid {
+    display: block;
+    margin: 25px 0 auto;
+  }
+
+  .choice-grid > * + * {
+    margin-top: 18px;
+  }
+
+  .occasion-card {
+    min-height: 180px;
+    width: 100%;
+  }
+
+  .package-card {
+    display: block;
+  }
+
+  .package-card > * + * {
+    margin-left: 0;
+    margin-top: 18px;
+  }
+
+  .package-card .primary-btn,
+  .package-card .secondary-btn {
+    width: 100%;
+  }
+
+  .quote-head,
+  .person-row {
+    -ms-grid-columns: 1.35fr 6px .75fr 6px .75fr;
+    grid-template-columns: 1.35fr .75fr .75fr;
+    grid-column-gap: 6px;
+  }
+
+  .person-label strong {
+    font-size: .85rem;
+  }
+}
+
+</style>
 </head>
 <body>
   <main class="app-shell">
@@ -198,7 +872,368 @@
       </div>
     </section>
   </main>
+<script>
+var screens = Array.prototype.slice.call(document.querySelectorAll(".screen"));
 
-  <script src="app.js?v=ios12-1"></script>
+var state = {
+  occasion: "",
+  customFrom: "Wedding",
+  selection: null,
+  people: {
+    bride: { label: "Bride", sub: "Includes your trial", makeup: 1, hair: 1 },
+    bridesmaids: { label: "Bridesmaids", sub: "", makeup: 0, hair: 0 },
+    mother: { label: "Mother", sub: "MOB / MOG", makeup: 0, hair: 0 },
+    flower: { label: "Grandmother / Flower Girl", sub: "", makeup: 0, hair: 0 },
+    additional: { label: "Additional Guest", sub: "Not part of retinue", makeup: 0, hair: 0 }
+  }
+};
+
+// Change these before publishing:
+var BUSINESS_WHATSAPP = "27XXXXXXXXX";
+var BUSINESS_EMAIL = "bookings@beguilingstudios.com";
+
+function forEachNode(nodes, callback) {
+  Array.prototype.forEach.call(nodes, callback);
+}
+
+function showScreen(id) {
+  forEachNode(screens, function (screen) {
+    if (screen.id === id) {
+      screen.classList.add("active");
+    } else {
+      screen.classList.remove("active");
+    }
+  });
+
+  window.scrollTo(0, 0);
+}
+
+function findParentWithAttribute(element, attributeName) {
+  while (element && element !== document) {
+    if (element.getAttribute && element.getAttribute(attributeName) !== null) {
+      return element;
+    }
+    element = element.parentNode;
+  }
+  return null;
+}
+
+function findParentWithClass(element, className) {
+  while (element && element !== document) {
+    if (element.classList && element.classList.contains(className)) {
+      return element;
+    }
+    element = element.parentNode;
+  }
+  return null;
+}
+
+document.addEventListener("click", function (event) {
+  var go = findParentWithAttribute(event.target, "data-go");
+  if (go) {
+    showScreen(go.getAttribute("data-go"));
+    return;
+  }
+
+  var back = findParentWithAttribute(event.target, "data-back");
+  if (back) {
+    showScreen(back.getAttribute("data-back"));
+    return;
+  }
+
+  var occasion = findParentWithAttribute(event.target, "data-occasion");
+  if (occasion) {
+    state.occasion = occasion.getAttribute("data-occasion");
+    showScreen(state.occasion === "matric" ? "matricScreen" : "weddingScreen");
+    return;
+  }
+
+  var custom = findParentWithAttribute(event.target, "data-custom");
+  if (custom) {
+    state.customFrom = custom.getAttribute("data-custom");
+    configureCustomQuote();
+    showScreen("customQuoteScreen");
+    return;
+  }
+
+  var packageButton = findParentWithClass(event.target, "package-select");
+  if (packageButton) {
+    state.selection = {
+      type: "package",
+      name: packageButton.getAttribute("data-package"),
+      price: Number(packageButton.getAttribute("data-price")),
+      details: packageButton.getAttribute("data-details")
+    };
+    renderPackageSummary();
+    showScreen("summaryScreen");
+  }
+});
+
+document.getElementById("customBack").addEventListener("click", function () {
+  showScreen("weddingScreen");
+});
+
+document.getElementById("summaryBack").addEventListener("click", function () {
+  if (state.selection && state.selection.type === "custom") {
+    showScreen("customQuoteScreen");
+  } else if (
+    state.selection &&
+    state.selection.name &&
+    state.selection.name.indexOf("Matric") === 0
+  ) {
+    showScreen("matricScreen");
+  } else {
+    showScreen("weddingScreen");
+  }
+});
+
+function configureCustomQuote() {
+  state.people.bride.label = "Bride";
+  state.people.bride.sub = "Includes your trial";
+  state.people.bride.makeup = 1;
+  state.people.bride.hair = 1;
+  renderPeopleRows();
+}
+
+function renderPeopleRows() {
+  var holder = document.getElementById("peopleRows");
+  holder.innerHTML = "";
+
+  var peopleKeys = Object.keys(state.people);
+  var i;
+  for (i = 0; i < peopleKeys.length; i++) {
+    var key = peopleKeys[i];
+    var person = state.people[key];
+    var row = document.createElement("div");
+    row.className = "person-row";
+    row.innerHTML =
+      '<div class="person-label">' +
+        "<strong>" + person.label + "</strong>" +
+        "<small>" + (person.sub || "&nbsp;") + "</small>" +
+      "</div>" +
+      stepperMarkup(key, "makeup", person.makeup) +
+      stepperMarkup(key, "hair", person.hair);
+
+    holder.appendChild(row);
+  }
+
+  forEachNode(holder.querySelectorAll("[data-step]"), function (button) {
+    button.addEventListener("click", function () {
+      var personKey = button.getAttribute("data-person");
+      var service = button.getAttribute("data-service");
+      var step = Number(button.getAttribute("data-step"));
+
+      state.people[personKey][service] = Math.max(
+        0,
+        state.people[personKey][service] + step
+      );
+
+      renderPeopleRows();
+      syncServiceAvailability();
+    });
+  });
+
+  syncServiceAvailability();
+}
+
+function stepperMarkup(person, service, value) {
+  return (
+    '<div class="stepper" data-service="' + service + '">' +
+      '<button type="button" data-step data-person="' + person +
+      '" data-service="' + service + '" data-step="-1">−</button>' +
+      "<output>" + value + "</output>" +
+      '<button type="button" data-step data-person="' + person +
+      '" data-service="' + service + '" data-step="1">+</button>' +
+    "</div>"
+  );
+}
+
+function syncServiceAvailability() {
+  var makeupOn = document.getElementById("makeupToggle").checked;
+  var hairOn = document.getElementById("hairToggle").checked;
+
+  forEachNode(
+    document.querySelectorAll('.stepper[data-service="makeup"]'),
+    function (el) {
+      if (makeupOn) {
+        el.classList.remove("disabled");
+      } else {
+        el.classList.add("disabled");
+      }
+    }
+  );
+
+  forEachNode(
+    document.querySelectorAll('.stepper[data-service="hair"]'),
+    function (el) {
+      if (hairOn) {
+        el.classList.remove("disabled");
+      } else {
+        el.classList.add("disabled");
+      }
+    }
+  );
+}
+
+document.getElementById("makeupToggle").addEventListener("change", syncServiceAvailability);
+document.getElementById("hairToggle").addEventListener("change", syncServiceAvailability);
+
+document.getElementById("quoteForm").addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  var makeupOn = document.getElementById("makeupToggle").checked;
+  var hairOn = document.getElementById("hairToggle").checked;
+  var people = [];
+
+  var peopleKeys = Object.keys(state.people);
+  var i;
+  for (i = 0; i < peopleKeys.length; i++) {
+    var key = peopleKeys[i];
+    var person = state.people[key];
+    var item = {
+      key: key,
+      label: person.label,
+      makeup: makeupOn ? person.makeup : 0,
+      hair: hairOn ? person.hair : 0
+    };
+
+    if (item.makeup > 0 || item.hair > 0) {
+      people.push(item);
+    }
+  }
+
+  state.selection = {
+    type: "custom",
+    occasion: "Wedding",
+    services: [],
+    people: people,
+    venue: document.getElementById("venue").value.trim(),
+    notes: document.getElementById("notes").value.trim()
+  };
+
+  if (makeupOn) state.selection.services.push("Makeup");
+  if (hairOn) state.selection.services.push("Hair");
+
+  renderCustomSummary();
+  showScreen("summaryScreen");
+});
+
+function formatRand(value) {
+  try {
+    return Number(value).toLocaleString("en-ZA");
+  } catch (error) {
+    return String(value);
+  }
+}
+
+function renderPackageSummary() {
+  var content = document.getElementById("summaryContent");
+  var selection = state.selection;
+
+  content.innerHTML =
+    "<h3>" + selection.name + "</h3>" +
+    "<dl>" +
+      '<div class="summary-line"><dt>Package</dt><dd>' +
+        selection.details +
+      "</dd></div>" +
+      '<div class="summary-line"><dt>Price</dt><dd>R' +
+        formatRand(selection.price) +
+      "</dd></div>" +
+    "</dl>";
+
+  updateContactLinks(
+    "Hi Beguiling Studios! I would like to book " +
+    selection.name +
+    " at R" +
+    formatRand(selection.price) +
+    ". Package details: " +
+    selection.details +
+    "."
+  );
+}
+
+function renderCustomSummary() {
+  var content = document.getElementById("summaryContent");
+  var selection = state.selection;
+  var peopleHtml = "";
+
+  if (selection.people.length) {
+    selection.people.forEach(function (person) {
+      peopleHtml +=
+        '<div class="summary-line"><dt>' +
+        person.label +
+        "</dt><dd>Makeup: " +
+        person.makeup +
+        " · Hair: " +
+        person.hair +
+        "</dd></div>";
+    });
+  } else {
+    peopleHtml =
+      '<div class="summary-line"><dt>Services</dt><dd>No quantities selected yet</dd></div>';
+  }
+
+  content.innerHTML =
+    "<h3>Wedding personalised quote</h3>" +
+    "<dl>" +
+      '<div class="summary-line"><dt>Services</dt><dd>' +
+        (selection.services.length ? selection.services.join(" & ") : "None selected") +
+      "</dd></div>" +
+      peopleHtml +
+      '<div class="summary-line"><dt>Venue</dt><dd>' +
+        (selection.venue || "To be confirmed") +
+      "</dd></div>" +
+      '<div class="summary-line"><dt>Notes</dt><dd>' +
+        (selection.notes || "None") +
+      "</dd></div>" +
+    "</dl>";
+
+  var peopleText = "No quantities selected";
+
+  if (selection.people.length) {
+    var parts = [];
+    selection.people.forEach(function (person) {
+      parts.push(
+        person.label +
+        ": Makeup " +
+        person.makeup +
+        ", Hair " +
+        person.hair
+      );
+    });
+    peopleText = parts.join("; ");
+  }
+
+  updateContactLinks(
+    "Hi Beguiling Studios! I would like a personalised Wedding quote. Services: " +
+    (selection.services.length ? selection.services.join(" & ") : "Not selected") +
+    ". " +
+    peopleText +
+    ". Venue: " +
+    (selection.venue || "To be confirmed") +
+    ". Notes: " +
+    (selection.notes || "None") +
+    "."
+  );
+}
+
+function updateContactLinks(message) {
+  var encoded = encodeURIComponent(message);
+
+  document.getElementById("whatsappBtn").href =
+    "https://wa.me/" + BUSINESS_WHATSAPP + "?text=" + encoded;
+
+  document.getElementById("emailBtn").href =
+    "mailto:" +
+    BUSINESS_EMAIL +
+    "?subject=" +
+    encodeURIComponent("Beguiling Studios Booking Request") +
+    "&body=" +
+    encoded;
+}
+
+renderPeopleRows();
+
+</script>
 </body>
 </html>
