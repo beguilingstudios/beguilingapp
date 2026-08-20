@@ -916,13 +916,14 @@ a {
         <div class="logo-mark" aria-label="Beguiling Studios logo"></div>
         <div>
           <h1>Beguiling Studios</h1>
-          <p>LEAVING HEARTS EVER BEGUILED</p>
+          <p>Beauty for your special day</p>
         </div>
       </div>
 
       <div class="hero-card">
         <p class="eyebrow">WELCOME TO</p>
-        <h2>Beguiling Studios</h2Z
+        <h2>Beguiling Studios</h2>
+        <p class="hero-copy">Choose your occasion and build the perfect beauty package.</p>
         <button class="primary-btn" data-go="occasionScreen">Touch to start</button>
       </div>
     </section>
@@ -1791,6 +1792,26 @@ function sendQuoteEmail() {
 
       setEmailStatus("", "");
       window.scrollTo(0, 0);
+
+      // Show the success screen for 5 seconds, then reset the app
+      // and return to the Welcome screen.
+      window.setTimeout(function () {
+        state.selection = null;
+        state.place = null;
+        state.route = null;
+
+        document.getElementById("clientDetailsForm").reset();
+        document.getElementById("clientDetailsForm").style.display = "";
+        document.getElementById("submitSuccessCard").style.display = "none";
+        document.getElementById("submitQuoteNumber").innerHTML = "";
+
+        if (typeof resetVenueSelection === "function") {
+          resetVenueSelection();
+        }
+
+        showScreen("homeScreen");
+        window.scrollTo(0, 0);
+      }, 5000);
     } else {
       var message = "Your quote could not be submitted. Please try again.";
 
