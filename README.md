@@ -7,7 +7,6 @@ A mobile-friendly booking/quote web app based on the supplied flowchart.
 - Home screen
 - Matric Dance
   - Promo R1,200
-  - Personalised quote
 - Wedding
   - Promo 1 — R6,000
   - Promo 2 — R14,700
@@ -50,3 +49,37 @@ The current app uses a simple `BS` logo mark. If you want to use your actual Beg
 This version is front-end only. It can send the completed request into WhatsApp or email, but it does not yet save bookings to a database.
 
 A later version can connect this to Supabase so submissions are stored automatically.
+
+
+## iPad / Safari compatibility
+
+The JavaScript has been written to avoid several newer syntax features that can cause the whole app to stop responding on older iPads/Safari versions.
+
+For best results:
+- Publish the app through GitHub Pages and open the HTTPS GitHub Pages address in Safari.
+- Do not open `index.html` directly from the iPad Files app.
+- Update iPadOS/Safari where possible.
+- After uploading a new version, refresh Safari and, if needed, clear the site's cached data so the older JavaScript file is not reused.
+
+
+## iPad mini 2 / iOS 12 support
+
+This build is specifically adjusted for Safari on iOS 12:
+
+- JavaScript uses ES5-compatible syntax.
+- No optional chaining, arrow functions, template literals, NodeList.forEach, or Element.closest.
+- Flexbox spacing does not rely on `gap`, which iOS 12 Safari does not support.
+- CSS `min()` and `clamp()` were removed.
+- `-webkit-` prefixes and older flexbox fallbacks are included.
+- Form fields use 16px text to stop Safari automatically zooming when focused.
+- CSS and JavaScript filenames include cache-busting version strings.
+- The layout falls back cleanly if newer visual effects are unavailable.
+
+### Important testing note
+
+Use the GitHub Pages HTTPS link in Safari. Do not test by opening `index.html` directly from the iPad Files app.
+
+If an old version still appears:
+1. Go to Settings > Safari > Advanced > Website Data.
+2. Remove the data for your GitHub Pages site.
+3. Reopen the site in Safari.
