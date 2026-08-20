@@ -518,14 +518,18 @@ a {
 }
 
 .stepper button {
-  width: 30px;
-  height: 30px;
+  width: 42px;
+  height: 42px;
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: white;
   color: var(--ink);
   cursor: pointer;
+  font-size: 22px;
+  line-height: 42px;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .stepper output {
@@ -685,6 +689,84 @@ a {
   }
 }
 
+
+.client-details-card {
+  margin-top: 18px;
+}
+
+.client-details-card h3 {
+  margin: 0 0 4px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.45rem;
+}
+
+.form-intro {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: .86rem;
+}
+
+.field-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: -6px;
+  margin-right: -6px;
+}
+
+.field-row .field-group {
+  width: 50%;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.venue-actions {
+  margin-top: 10px;
+}
+
+.venue-actions .secondary-btn {
+  width: 100%;
+}
+
+.optional-label {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.email-status {
+  min-height: 22px;
+  margin-top: 12px;
+  text-align: center;
+  font-size: .88rem;
+  line-height: 1.5;
+}
+
+.email-status.success {
+  color: #287a45;
+}
+
+.email-status.error {
+  color: #b13e53;
+}
+
+.email-status.sending {
+  color: var(--muted);
+}
+
+@media (max-width: 620px) {
+  .field-row {
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .field-row .field-group {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -840,12 +922,6 @@ a {
         <div id="peopleRows"></div>
 
         <div class="field-group">
-          <label for="venue">Venue</label>
-          <input id="venue" name="venue" type="text" placeholder="Venue / suburb" />
-          <small>Travel can be calculated once the venue is confirmed.</small>
-        </div>
-
-        <div class="field-group">
           <label for="notes">Additional notes</label>
           <textarea id="notes" name="notes" rows="4" placeholder="Anything else we should know?"></textarea>
         </div>
@@ -865,9 +941,53 @@ a {
 
       <div class="summary-card" id="summaryContent"></div>
 
+      <form id="clientDetailsForm" class="quote-card client-details-card">
+        <h3>Client details</h3>
+        <p class="form-intro">Enter the client's details before sending the quote.</p>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label for="clientName">Name</label>
+            <input id="clientName" type="text" autocomplete="given-name" required />
+          </div>
+          <div class="field-group">
+            <label for="clientSurname">Surname</label>
+            <input id="clientSurname" type="text" autocomplete="family-name" required />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label for="clientPhone">Cellphone number</label>
+            <input id="clientPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="e.g. 082 123 4567" required />
+          </div>
+          <div class="field-group">
+            <label for="clientEmail">Email address</label>
+            <input id="clientEmail" type="email" inputmode="email" autocomplete="email" placeholder="client@example.com" required />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="clientVenue">Venue</label>
+          <input id="clientVenue" type="text" placeholder="Venue name, suburb or address" required />
+          <div class="venue-actions">
+            <button type="button" class="secondary-btn" id="openMapsBtn">Find venue on Google Maps</button>
+          </div>
+          <small>Type the venue or address, then open it in Google Maps to confirm the location.</small>
+        </div>
+
+        <div class="field-group">
+          <label for="googleMapsLink">Google Maps link <span class="optional-label">(optional)</span></label>
+          <input id="googleMapsLink" type="url" inputmode="url" placeholder="Paste the Google Maps share link here" />
+          <small>You can copy the venue's Share link from Google Maps and paste it here.</small>
+        </div>
+
+        <button type="submit" id="sendQuoteBtn" class="primary-btn full-width">Email quote to client</button>
+        <div id="emailStatus" class="email-status" aria-live="polite"></div>
+      </form>
+
       <div class="summary-actions">
-        <a id="whatsappBtn" class="primary-btn full-width" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
-        <a id="emailBtn" class="secondary-btn full-width" href="#">Send by email</a>
+        <a id="whatsappBtn" class="secondary-btn full-width" href="#" target="_blank" rel="noopener">Send summary on WhatsApp</a>
         <button class="text-btn" data-go="homeScreen">Start over</button>
       </div>
     </section>
@@ -890,7 +1010,19 @@ var state = {
 
 // Change these before publishing:
 var BUSINESS_WHATSAPP = "27XXXXXXXXX";
-var BUSINESS_EMAIL = "bookings@beguilingstudios.com";
+var BUSINESS_EMAIL = "YOUR_EMAIL_ADDRESS";
+
+/*
+  EMAIL SENDING SETUP
+  Create an EmailJS account, connect the email address you want quotes sent FROM,
+  then replace the three values below.
+
+  In the EmailJS template, set the recipient / To Email field to:
+  {{to_email}}
+*/
+var EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
+var EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+var EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
 
 function forEachNode(nodes, callback) {
   Array.prototype.forEach.call(nodes, callback);
@@ -1017,11 +1149,21 @@ function renderPeopleRows() {
     holder.appendChild(row);
   }
 
-  forEachNode(holder.querySelectorAll("[data-step]"), function (button) {
-    button.addEventListener("click", function () {
+  forEachNode(holder.querySelectorAll("[data-step-button]"), function (button) {
+    var handledByTouch = false;
+
+    function changeCount(event) {
+      if (event && event.preventDefault) {
+        event.preventDefault();
+      }
+
       var personKey = button.getAttribute("data-person");
       var service = button.getAttribute("data-service");
-      var step = Number(button.getAttribute("data-step"));
+      var step = parseInt(button.getAttribute("data-step"), 10);
+
+      if (isNaN(step)) {
+        return;
+      }
 
       state.people[personKey][service] = Math.max(
         0,
@@ -1030,7 +1172,21 @@ function renderPeopleRows() {
 
       renderPeopleRows();
       syncServiceAvailability();
-    });
+    }
+
+    button.addEventListener("touchend", function (event) {
+      handledByTouch = true;
+      changeCount(event);
+      window.setTimeout(function () {
+        handledByTouch = false;
+      }, 500);
+    }, false);
+
+    button.addEventListener("click", function (event) {
+      if (!handledByTouch) {
+        changeCount(event);
+      }
+    }, false);
   });
 
   syncServiceAvailability();
@@ -1039,11 +1195,11 @@ function renderPeopleRows() {
 function stepperMarkup(person, service, value) {
   return (
     '<div class="stepper" data-service="' + service + '">' +
-      '<button type="button" data-step data-person="' + person +
-      '" data-service="' + service + '" data-step="-1">−</button>' +
+      '<button type="button" data-step-button="1" data-person="' + person +
+      '" data-service="' + service + '" data-step="-1" aria-label="Decrease">−</button>' +
       "<output>" + value + "</output>" +
-      '<button type="button" data-step data-person="' + person +
-      '" data-service="' + service + '" data-step="1">+</button>' +
+      '<button type="button" data-step-button="1" data-person="' + person +
+      '" data-service="' + service + '" data-step="1" aria-label="Increase">+</button>' +
     "</div>"
   );
 }
@@ -1107,7 +1263,7 @@ document.getElementById("quoteForm").addEventListener("submit", function (event)
     occasion: "Wedding",
     services: [],
     people: people,
-    venue: document.getElementById("venue").value.trim(),
+    venue: "",
     notes: document.getElementById("notes").value.trim()
   };
 
@@ -1181,7 +1337,7 @@ function renderCustomSummary() {
       "</dd></div>" +
       peopleHtml +
       '<div class="summary-line"><dt>Venue</dt><dd>' +
-        (selection.venue || "To be confirmed") +
+        "Enter below before sending" +
       "</dd></div>" +
       '<div class="summary-line"><dt>Notes</dt><dd>' +
         (selection.notes || "None") +
@@ -1210,26 +1366,181 @@ function renderCustomSummary() {
     ". " +
     peopleText +
     ". Venue: " +
-    (selection.venue || "To be confirmed") +
+    "Enter below before sending" +
     ". Notes: " +
     (selection.notes || "None") +
     "."
   );
 }
 
+
+function getClientDetails() {
+  return {
+    name: document.getElementById("clientName").value.replace(/^\s+|\s+$/g, ""),
+    surname: document.getElementById("clientSurname").value.replace(/^\s+|\s+$/g, ""),
+    phone: document.getElementById("clientPhone").value.replace(/^\s+|\s+$/g, ""),
+    email: document.getElementById("clientEmail").value.replace(/^\s+|\s+$/g, ""),
+    venue: document.getElementById("clientVenue").value.replace(/^\s+|\s+$/g, ""),
+    mapsLink: document.getElementById("googleMapsLink").value.replace(/^\s+|\s+$/g, "")
+  };
+}
+
+function buildQuoteData() {
+  var selection = state.selection || {};
+  var quoteTitle = "";
+  var quotePrice = "";
+  var quoteDetails = "";
+  var notes = selection.notes || "";
+
+  if (selection.type === "package") {
+    quoteTitle = selection.name || "Beguiling Studios Quote";
+    quotePrice = selection.price ? "R" + formatRand(selection.price) : "";
+    quoteDetails = selection.details || "";
+  } else {
+    quoteTitle = "Wedding personalised quote request";
+    quotePrice = "To be confirmed";
+
+    if (selection.people && selection.people.length) {
+      var parts = [];
+      var i;
+      for (i = 0; i < selection.people.length; i++) {
+        parts.push(
+          selection.people[i].label +
+          " — Makeup: " + selection.people[i].makeup +
+          ", Hair: " + selection.people[i].hair
+        );
+      }
+      quoteDetails = parts.join("; ");
+    } else {
+      quoteDetails = "Personalised wedding quote request";
+    }
+  }
+
+  return {
+    title: quoteTitle,
+    price: quotePrice,
+    details: quoteDetails,
+    notes: notes
+  };
+}
+
+function setEmailStatus(message, className) {
+  var status = document.getElementById("emailStatus");
+  status.className = "email-status " + (className || "");
+  status.innerHTML = message;
+}
+
+function emailConfigIsReady() {
+  return (
+    EMAILJS_SERVICE_ID !== "YOUR_SERVICE_ID" &&
+    EMAILJS_TEMPLATE_ID !== "YOUR_TEMPLATE_ID" &&
+    EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY" &&
+    BUSINESS_EMAIL !== "YOUR_EMAIL_ADDRESS"
+  );
+}
+
+function sendQuoteEmail() {
+  var client = getClientDetails();
+  var quote = buildQuoteData();
+  var sendButton = document.getElementById("sendQuoteBtn");
+
+  if (!emailConfigIsReady()) {
+    setEmailStatus(
+      "Email sending has not been connected yet. Add your EmailJS Service ID, Template ID, Public Key and your email address in the code.",
+      "error"
+    );
+    return;
+  }
+
+  sendButton.disabled = true;
+  sendButton.innerHTML = "Sending quote...";
+  setEmailStatus("Sending quote to " + client.email + "...", "sending");
+
+  var data = {
+    service_id: EMAILJS_SERVICE_ID,
+    template_id: EMAILJS_TEMPLATE_ID,
+    user_id: EMAILJS_PUBLIC_KEY,
+    template_params: {
+      to_email: client.email,
+      client_name: client.name,
+      client_surname: client.surname,
+      client_full_name: client.name + " " + client.surname,
+      client_phone: client.phone,
+      venue: client.venue,
+      google_maps_link: client.mapsLink || createGoogleMapsUrl(client.venue),
+      quote_title: quote.title,
+      quote_price: quote.price,
+      quote_details: quote.details,
+      notes: quote.notes || "None",
+      business_email: BUSINESS_EMAIL
+    }
+  };
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "https://api.emailjs.com/api/v1.0/email/send", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState !== 4) return;
+
+    sendButton.disabled = false;
+    sendButton.innerHTML = "Email quote to client";
+
+    if (xhr.status >= 200 && xhr.status < 300) {
+      setEmailStatus(
+        "Quote sent successfully to <strong>" + escapeHtml(client.email) + "</strong>.",
+        "success"
+      );
+    } else {
+      setEmailStatus(
+        "The quote could not be sent. Please check the EmailJS settings and try again.",
+        "error"
+      );
+    }
+  };
+
+  xhr.onerror = function () {
+    sendButton.disabled = false;
+    sendButton.innerHTML = "Email quote to client";
+    setEmailStatus("Network error while sending the quote. Please try again.", "error");
+  };
+
+  xhr.send(JSON.stringify(data));
+}
+
+function escapeHtml(value) {
+  var div = document.createElement("div");
+  div.appendChild(document.createTextNode(value || ""));
+  return div.innerHTML;
+}
+
+function createGoogleMapsUrl(query) {
+  var cleanQuery = query || "";
+  return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(cleanQuery);
+}
+
+document.getElementById("openMapsBtn").addEventListener("click", function () {
+  var venue = document.getElementById("clientVenue").value.replace(/^\s+|\s+$/g, "");
+
+  if (!venue) {
+    document.getElementById("clientVenue").focus();
+    setEmailStatus("Type a venue name or address first, then tap Find venue on Google Maps.", "error");
+    return;
+  }
+
+  window.open(createGoogleMapsUrl(venue), "_blank");
+});
+
+document.getElementById("clientDetailsForm").addEventListener("submit", function (event) {
+  event.preventDefault();
+  sendQuoteEmail();
+});
+
 function updateContactLinks(message) {
   var encoded = encodeURIComponent(message);
 
   document.getElementById("whatsappBtn").href =
     "https://wa.me/" + BUSINESS_WHATSAPP + "?text=" + encoded;
-
-  document.getElementById("emailBtn").href =
-    "mailto:" +
-    BUSINESS_EMAIL +
-    "?subject=" +
-    encodeURIComponent("Beguiling Studios Booking Request") +
-    "&body=" +
-    encoded;
 }
 
 renderPeopleRows();
