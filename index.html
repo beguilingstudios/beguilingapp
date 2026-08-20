@@ -1765,28 +1765,10 @@ function buildSendQuoteItems() {
   /*
     Personalised wedding quote.
 
-    We only use combinations for which the uploaded price list gives us a
-    definite database price. This prevents the browser from inventing prices.
-
-    Bride:
-      Makeup only -> bridal_makeup
-      Makeup + Hair -> bridal_makeup_hair
-
-    Bridesmaids:
-      Makeup + Hair together -> bridesmaids_1500
-
-    Mother:
-      Makeup + Hair together -> mother_1200
-
-    Flower Girl / Granny:
-      Hair -> flowergirl_hair
-
-    Additional Guest:
-      Hair -> hair_upstyle
-      Makeup -> makeup_700
-
-    Where a user selects a combination that does not yet have an unambiguous
-    pricing row, we stop and ask for that rate to be configured.
+    Prices are not hard-coded here. The website only sends service codes and
+    quantities. The send-quote Edge Function reads the current unit_price from
+    Supabase service_pricing, so you can change prices later in Supabase
+    without editing this HTML.
   */
   if (selection.type === "custom") {
     var people = selection.people || [];
@@ -1803,49 +1785,32 @@ function buildSendQuoteItems() {
           addQuoteItem(items, "bridal_makeup_hair", makeup);
         } else if (makeup > 0 && hair === 0) {
           addQuoteItem(items, "bridal_makeup", makeup);
-        } else if (hair > 0 || makeup !== hair) {
+        } else if (hair > 0) {
           return {
             items: [],
-            error: "Bride hair-only or unequal Bride makeup/hair quantities still need a price configured."
+            error: "Bride hair-only pricing has not been added to Supabase yet."
           };
         }
       }
 
       else if (label === "Bridesmaids") {
-        if (makeup > 0 && hair > 0 && makeup === hair) {
-          addQuoteItem(items, "bridesmaids_1500", makeup);
-        } else if (makeup > 0 || hair > 0) {
-          return {
-            items: [],
-            error: "Bridesmaid makeup-only or hair-only pricing still needs to be confirmed."
-          };
-        }
+        addQuoteItem(items, "bridesmaid_makeup", makeup);
+        addQuoteItem(items, "bridesmaid_hair", hair);
       }
 
       else if (label === "Mother") {
-        if (makeup > 0 && hair > 0 && makeup === hair) {
-          addQuoteItem(items, "mother_1200", makeup);
-        } else if (makeup > 0 || hair > 0) {
-          return {
-            items: [],
-            error: "Mother makeup-only or hair-only pricing still needs to be confirmed."
-          };
-        }
+        addQuoteItem(items, "mother_makeup", makeup);
+        addQuoteItem(items, "mother_hair", hair);
       }
 
       else if (label === "Grandmother / Flower Girl") {
-        if (makeup > 0) {
-          return {
-            items: [],
-            error: "Grandmother / Flower Girl makeup pricing still needs to be confirmed."
-          };
-        }
+        addQuoteItem(items, "flowergirl_makeup", makeup);
         addQuoteItem(items, "flowergirl_hair", hair);
       }
 
       else if (label === "Additional Guest") {
-        addQuoteItem(items, "makeup_700", makeup);
-        addQuoteItem(items, "hair_upstyle", hair);
+        addQuoteItem(items, "guest_makeup", makeup);
+        addQuoteItem(items, "guest_hair", hair);
       }
     }
 
