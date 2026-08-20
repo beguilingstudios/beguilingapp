@@ -1000,6 +1000,44 @@ select {
   margin-top: 12px;
 }
 
+
+/* Match the tagline font to the Beguiling Studios heading */
+#homeScreen .tagline,
+.tagline,
+.hero-copy .tagline {
+  font-family: "Playfair Display", Georgia, serif !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+}
+
+
+/* Stronger pink treatment across the web app */
+html,
+body {
+  background: linear-gradient(135deg, #ffdbe8 0%, #ffcddd 48%, #ffc2d6 100%) !important;
+}
+
+.card,
+.screen-card,
+.form-card,
+.summary-card,
+.package-card,
+.custom-card {
+  background: rgba(255, 235, 243, 0.98) !important;
+}
+
+input,
+textarea,
+select {
+  background-color: #fff3f8 !important;
+}
+
+body::before,
+body::after {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
 </style>
 </head>
 <body>
