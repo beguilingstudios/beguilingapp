@@ -1105,6 +1105,19 @@ body::after {
   justify-content: center !important;
 }
 
+
+/* Occasion date field */
+#occasionDate {
+  min-height: 48px;
+  font-size: 16px;
+  color: var(--ink);
+  background-color: #fff3f8 !important;
+}
+
+#occasionDate::-webkit-date-and-time-value {
+  text-align: left;
+}
+
 </style>
 </head>
 <body>
@@ -1305,6 +1318,15 @@ body::after {
             <label for="clientEmail">Email address</label>
             <input id="clientEmail" type="email" inputmode="email" autocomplete="email" placeholder="client@example.com" required />
           </div>
+        </div>
+
+        <div class="field-group">
+          <label for="occasionDate">Occasion Date</label>
+          <input
+            id="occasionDate"
+            type="date"
+            required
+          />
         </div>
 
         <div class="field-group venue-field-group">
@@ -1729,6 +1751,7 @@ function getClientDetails() {
     surname: document.getElementById("clientSurname").value.replace(/^\s+|\s+$/g, ""),
     phone: document.getElementById("clientPhone").value.replace(/^\s+|\s+$/g, ""),
     email: document.getElementById("clientEmail").value.replace(/^\s+|\s+$/g, ""),
+    occasionDate: document.getElementById("occasionDate").value,
     venue: document.getElementById("clientVenue").value.replace(/^\s+|\s+$/g, ""),
     mapsLink: document.getElementById("googleMapsLink").value,
     placeId: document.getElementById("selectedPlaceId").value,
@@ -1922,6 +1945,7 @@ function sendQuoteEmail() {
     clientSurname: client.surname,
     clientEmail: client.email,
     clientPhone: client.phone,
+    occasionDate: client.occasionDate,
     venue: client.venue,
     distanceKm: Number(client.distanceKm),
     items: mapped.items,
