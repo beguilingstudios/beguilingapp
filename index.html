@@ -38,7 +38,7 @@ body {
   min-height: 100vh;
   font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   color: var(--ink);
-  background: #fff5f7;
+  background: linear-gradient(135deg, #fff0f5 0%, #ffe4ed 48%, #ffd9e6 100%);
   background:
     radial-gradient(circle at top left, #ffe9ef 0, transparent 36%),
     linear-gradient(160deg, #fffdfa 0%, #fff2f5 100%);
@@ -907,6 +907,99 @@ a {
   margin: 5px 0;
 }
 
+
+/* Softer all-pink page treatment */
+html,
+body {
+  background: linear-gradient(135deg, #fff0f5 0%, #ffe4ed 48%, #ffd9e6 100%) !important;
+}
+
+body::before,
+body::after {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.app-shell,
+.screen-card,
+.form-card,
+.summary-card {
+  background-color: rgba(255, 248, 251, 0.96);
+}
+
+
+/* Larger Beguiling Studios logos */
+.logo-mark {
+  width: 86px !important;
+  height: 86px !important;
+  border-radius: 18px !important;
+}
+
+.page-logo {
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 14px !important;
+}
+
+@media (max-width: 620px) {
+  .logo-mark {
+    width: 76px !important;
+    height: 76px !important;
+  }
+
+  .page-logo {
+    width: 58px !important;
+    height: 58px !important;
+  }
+}
+
+
+/* Beguiling Studios tagline */
+.tagline,
+.hero-copy .tagline,
+#homeScreen .tagline {
+  font-family: "Playfair Display", Georgia, serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em;
+}
+
+
+/* Slightly pinker Beguiling Studios page treatment */
+html,
+body {
+  background: linear-gradient(135deg, #ffe8f0 0%, #ffdce8 48%, #ffd2e1 100%) !important;
+}
+
+.screen,
+.app-shell {
+  background-color: transparent;
+}
+
+.card,
+.screen-card,
+.form-card,
+.summary-card,
+.package-card,
+.custom-card {
+  background: rgba(255, 242, 247, 0.97) !important;
+}
+
+input,
+textarea,
+select {
+  background-color: #fff8fb !important;
+}
+
+
+/* Extra spacing between Beguiling Studios branding and Touch to start */
+#homeScreen .hero-copy {
+  margin-bottom: 26px !important;
+}
+
+#homeScreen .primary-btn {
+  margin-top: 12px;
+}
+
 </style>
 </head>
 <body>
@@ -916,14 +1009,13 @@ a {
         <div class="logo-mark" aria-label="Beguiling Studios logo"></div>
         <div>
           <h1>Beguiling Studios</h1>
-          <p>Beauty for your special day</p>
+          <p>LEAVING HEARTS EVER BEGUILED</p>
         </div>
       </div>
 
       <div class="hero-card">
         <p class="eyebrow">WELCOME TO</p>
         <h2>Beguiling Studios</h2>
-        <p class="hero-copy">Choose your occasion and build the perfect beauty package.</p>
         <button class="primary-btn" data-go="occasionScreen">Touch to start</button>
       </div>
     </section>
