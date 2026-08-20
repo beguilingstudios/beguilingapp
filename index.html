@@ -1084,11 +1084,6 @@ a {
         <button type="submit" id="sendQuoteBtn" class="primary-btn full-width">Submit</button>
         <div id="emailStatus" class="email-status" aria-live="polite"></div>
       </form>
-
-      <div class="summary-actions">
-        <a id="whatsappBtn" class="secondary-btn full-width" href="#" target="_blank" rel="noopener">Send summary on WhatsApp</a>
-        <button class="text-btn" data-go="homeScreen">Start over</button>
-      </div>
     </section>
   </main>
 <script>
@@ -1955,8 +1950,11 @@ document.getElementById("clientDetailsForm").addEventListener("submit", function
 function updateContactLinks(message) {
   var encoded = encodeURIComponent(message);
 
-  document.getElementById("whatsappBtn").href =
-    "https://wa.me/" + BUSINESS_WHATSAPP + "?text=" + encoded;
+  var whatsappBtn = document.getElementById("whatsappBtn");
+  if (whatsappBtn) {
+    whatsappBtn.href =
+      "https://wa.me/" + BUSINESS_WHATSAPP + "?text=" + encoded;
+  }
 }
 
 renderPeopleRows();
