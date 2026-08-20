@@ -1071,7 +1071,6 @@ a {
           <div id="selectedVenueCard" class="selected-venue-card" style="display:none;">
             <strong id="selectedVenueName"></strong>
             <span id="selectedVenueAddress"></span>
-            <span id="selectedVenueDistance"></span>
           </div>
 
           <input id="selectedPlaceId" type="hidden" />
@@ -1851,10 +1850,6 @@ function selectGooglePlace(placeId, fullText, mainText, secondaryText) {
   document.getElementById("selectedVenueAddress").innerHTML =
     escapeHtml(secondaryText || displayText);
 
-  var selectedVenueDistance = document.getElementById("selectedVenueDistance");
-  if (selectedVenueDistance) {
-    selectedVenueDistance.innerHTML = "Calculating driving distance...";
-  }
 
   document.getElementById("selectedVenueCard").style.display = "block";
   document.getElementById("venueHelp").innerHTML =
@@ -1874,10 +1869,6 @@ function calculateVenueDistance(placeId) {
     },
     function (error, data) {
       if (error || !data) {
-        var selectedVenueDistance = document.getElementById("selectedVenueDistance");
-        if (selectedVenueDistance) {
-          selectedVenueDistance.innerHTML = "Distance could not be calculated.";
-        }
 
         document.getElementById("venueHelp").innerHTML =
           "Venue selected, but travel distance is unavailable: " +
@@ -1897,12 +1888,6 @@ function calculateVenueDistance(placeId) {
 
       document.getElementById("travelDuration").value = duration;
 
-      var selectedVenueDistance = document.getElementById("selectedVenueDistance");
-      if (selectedVenueDistance) {
-        selectedVenueDistance.innerHTML =
-          (!isNaN(km) ? km.toFixed(1) + " km" : "Distance unavailable") +
-          (duration ? " · approx. " + escapeHtml(duration) : "");
-      }
 
       document.getElementById("venueHelp").innerHTML =
         "Venue selected from Google Places and driving distance calculated.";
