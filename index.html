@@ -1082,7 +1082,7 @@ a {
           <input id="travelDuration" type="hidden" />
         </div>
 
-        <button type="submit" id="sendQuoteBtn" class="primary-btn full-width">Email quote to client</button>
+        <button type="submit" id="sendQuoteBtn" class="primary-btn full-width">Submit</button>
         <div id="emailStatus" class="email-status" aria-live="polite"></div>
       </form>
 
@@ -1598,7 +1598,7 @@ function sendQuoteEmail() {
     if (xhr.readyState !== 4) return;
 
     sendButton.disabled = false;
-    sendButton.innerHTML = "Email quote to client";
+    sendButton.innerHTML = "Submit";
 
     if (xhr.status >= 200 && xhr.status < 300) {
       setEmailStatus(
@@ -1615,7 +1615,7 @@ function sendQuoteEmail() {
 
   xhr.onerror = function () {
     sendButton.disabled = false;
-    sendButton.innerHTML = "Email quote to client";
+    sendButton.innerHTML = "Submit";
     setEmailStatus("Network error while sending the quote. Please try again.", "error");
   };
 
@@ -1851,8 +1851,10 @@ function selectGooglePlace(placeId, fullText, mainText, secondaryText) {
   document.getElementById("selectedVenueAddress").innerHTML =
     escapeHtml(secondaryText || displayText);
 
-  document.getElementById("selectedVenueDistance").innerHTML =
-    "Calculating driving distance...";
+  var selectedVenueDistance = document.getElementById("selectedVenueDistance");
+  if (selectedVenueDistance) {
+    selectedVenueDistance.innerHTML = "Calculating driving distance...";
+  }
 
   document.getElementById("selectedVenueCard").style.display = "block";
   document.getElementById("venueHelp").innerHTML =
@@ -1872,8 +1874,10 @@ function calculateVenueDistance(placeId) {
     },
     function (error, data) {
       if (error || !data) {
-        document.getElementById("selectedVenueDistance").innerHTML =
-          "Distance could not be calculated.";
+        var selectedVenueDistance = document.getElementById("selectedVenueDistance");
+        if (selectedVenueDistance) {
+          selectedVenueDistance.innerHTML = "Distance could not be calculated.";
+        }
 
         document.getElementById("venueHelp").innerHTML =
           "Venue selected, but travel distance is unavailable: " +
@@ -1893,9 +1897,12 @@ function calculateVenueDistance(placeId) {
 
       document.getElementById("travelDuration").value = duration;
 
-      document.getElementById("selectedVenueDistance").innerHTML =
-        (!isNaN(km) ? km.toFixed(1) + " km" : "Distance unavailable") +
-        (duration ? " · approx. " + escapeHtml(duration) : "");
+      var selectedVenueDistance = document.getElementById("selectedVenueDistance");
+      if (selectedVenueDistance) {
+        selectedVenueDistance.innerHTML =
+          (!isNaN(km) ? km.toFixed(1) + " km" : "Distance unavailable") +
+          (duration ? " · approx. " + escapeHtml(duration) : "");
+      }
 
       document.getElementById("venueHelp").innerHTML =
         "Venue selected from Google Places and driving distance calculated.";
