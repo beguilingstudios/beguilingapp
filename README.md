@@ -1,85 +1,99 @@
-# Beguiling Studios Web App
+# Beguiling Studios — Google Places + Automatic Distance
 
-A mobile-friendly booking/quote web app based on the supplied flowchart.
+This build keeps the web app compatible with iPad mini 2 / iOS 12 while adding:
 
-## Included flow
+- Google Places type-ahead search as the client types a venue/address.
+- Google Places selection instead of free-text only.
+- Automatic driving distance from your configured business/travel origin.
+- Automatic estimated driving duration.
+- The selected venue, Google Maps link, distance, and duration can be included in the emailed quote.
+- Your Google Maps API key is kept on the server in Supabase, not exposed in `index.html`.
 
-- Home screen
-- Matric Dance
-  - Promo R1,200
-- Wedding
-  - Promo 1 — R6,000
-  - Promo 2 — R14,700
-  - Personalised quote
-- Custom makeup/hair quantities
-- Venue and additional notes
-- Booking summary
-- WhatsApp and email hand-off
+## Why this uses a Supabase Edge Function
 
-## Before publishing
+Google's current Maps JavaScript API officially supports only the current and previous major iOS versions. iOS 12 is far outside that support window.
 
-Open `app.js` and replace:
+This version therefore does NOT load the modern Google Maps JavaScript library on the iPad. The iPad uses old-compatible JavaScript to call your Supabase Edge Function, and the Edge Function calls the current Google Places and Routes APIs.
 
-```js
-const BUSINESS_WHATSAPP = "27XXXXXXXXX";
-const BUSINESS_EMAIL = "bookings@beguilingstudios.com";
-```
+## 1. Google Cloud setup
 
-Use the WhatsApp number in international format with digits only, for example `27821234567`.
+In Google Cloud Console, enable:
 
-## Publish free with GitHub Pages
+- Places API (New)
+- Routes API
 
-1. Create a new GitHub repository.
-2. Upload `index.html`, `styles.css`, and `app.js`.
-3. Commit the files.
-4. Go to **Settings → Pages**.
-5. Under **Build and deployment**, choose **Deploy from a branch**.
-6. Select the `main` branch and `/ (root)`.
-7. Save.
-8. GitHub will provide the public web address.
+Create an API key. Restrict the key to those APIs if possible.
 
-No build process or npm installation is required.
+## 2. Supabase secrets
 
-## Custom logo
+In your Supabase project, add these Edge Function secrets:
 
-The current app uses a simple `BS` logo mark. If you want to use your actual Beguiling Studios logo, add the image to the repository and replace the `.logo-mark` element in `index.html` with an `<img>` tag.
+- `GOOGLE_MAPS_API_KEY` = your Google API key
+- `TRAVEL_BASE_LAT` = latitude where your travel calculation starts
+- `TRAVEL_BASE_LNG` = longitude where your travel calculation starts
 
-## Notes
+Example only:
 
-This version is front-end only. It can send the completed request into WhatsApp or email, but it does not yet save bookings to a database.
+TRAVEL_BASE_LAT=-26.2041
+TRAVEL_BASE_LNG=28.0473
 
-A later version can connect this to Supabase so submissions are stored automatically.
+Use YOUR actual starting point, not the example.
 
+## 3. Deploy the Edge Function
 
-## iPad / Safari compatibility
+Place the supplied function at:
 
-The JavaScript has been written to avoid several newer syntax features that can cause the whole app to stop responding on older iPads/Safari versions.
+supabase/functions/google-places/index.ts
 
-For best results:
-- Publish the app through GitHub Pages and open the HTTPS GitHub Pages address in Safari.
-- Do not open `index.html` directly from the iPad Files app.
-- Update iPadOS/Safari where possible.
-- After uploading a new version, refresh Safari and, if needed, clear the site's cached data so the older JavaScript file is not reused.
+Then deploy:
 
+supabase functions deploy google-places
 
-## iPad mini 2 / iOS 12 support
+If you normally deploy Edge Functions through the Supabase dashboard/project workflow instead, use that method.
 
-This build is specifically adjusted for Safari on iOS 12:
+## 4. Configure index.html
 
-- JavaScript uses ES5-compatible syntax.
-- No optional chaining, arrow functions, template literals, NodeList.forEach, or Element.closest.
-- Flexbox spacing does not rely on `gap`, which iOS 12 Safari does not support.
-- CSS `min()` and `clamp()` were removed.
-- `-webkit-` prefixes and older flexbox fallbacks are included.
-- Form fields use 16px text to stop Safari automatically zooming when focused.
-- CSS and JavaScript filenames include cache-busting version strings.
-- The layout falls back cleanly if newer visual effects are unavailable.
+Open `index.html` and replace:
 
-### Important testing note
+var SUPABASE_URL = "YOUR_SUPABASE_URL";
+var SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-Use the GitHub Pages HTTPS link in Safari. Do not test by opening `index.html` directly from the iPad Files app.
+Example Supabase URL format:
 
-If an old version still appears:
-1. Go to Settings > Safari > Advanced > Website Data.
-2. Remove the data for your GitHub Pages site.
-3. Reopen the site in Safari.
+https://YOUR_PROJECT_REF.supabase.co
+
+Keep your Google API key OUT of index.html.
+
+## 5. EmailJS
+
+Your existing email configuration remains:
+
+var BUSINESS_EMAIL = "YOUR_EMAIL_ADDRESS";
+var EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
+var EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+var EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+
+Add these to your EmailJS template if you want the travel information in the email:
+
+{{travel_distance}}
+{{travel_duration}}
+{{venue}}
+{{google_maps_link}}
+
+## 6. GitHub Pages
+
+Upload only `index.html` to the root of the GitHub Pages repository.
+
+The Supabase folder is for deploying the Edge Function; it does not need to be uploaded to GitHub Pages.
+
+## Client flow
+
+1. Client starts typing a venue/address.
+2. Your app sends the text to Supabase.
+3. Supabase calls Google Places Autocomplete.
+4. Google suggestions appear below the input.
+5. Client taps a suggestion.
+6. Supabase retrieves the exact place and coordinates.
+7. Supabase calls Google Routes.
+8. The app displays the driving distance and estimated duration.
+9. That information is included with the quote.
