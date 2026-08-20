@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f8a8bb" />
+  <title>Beguiling Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section id="homeScreen" class="screen active">
+      <div class="brand">
+        <div class="logo-mark">BS</div>
+        <div>
+          <h1>Beguiling Studios</h1>
+          <p>Beauty for your special day</p>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <p class="eyebrow">WELCOME TO</p>
+        <h2>Beguiling Studios</h2>
+        <p class="hero-copy">Choose your occasion and build the perfect beauty package.</p>
+        <button class="primary-btn" data-go="occasionScreen">Touch to start</button>
+      </div>
+    </section>
+
+    <section id="occasionScreen" class="screen">
+      <div class="topbar">
+        <button class="icon-btn" data-back="homeScreen" aria-label="Back">←</button>
+        <div>
+          <p class="eyebrow">STEP 1</p>
+          <h2>Choose your occasion</h2>
+        </div>
+      </div>
+
+      <div class="choice-grid">
+        <button class="occasion-card" data-occasion="matric">
+          <span class="card-icon">✨</span>
+          <strong>Matric Dance</strong>
+          <small>Makeup, hair and travel options</small>
+        </button>
+
+        <button class="occasion-card" data-occasion="wedding">
+          <span class="card-icon">💍</span>
+          <strong>Wedding</strong>
+          <small>Bride and bridal party packages</small>
+        </button>
+      </div>
+    </section>
+
+    <section id="matricScreen" class="screen">
+      <div class="topbar">
+        <button class="icon-btn" data-back="occasionScreen" aria-label="Back">←</button>
+        <div>
+          <p class="eyebrow">MATRIC DANCE</p>
+          <h2>Select a package</h2>
+        </div>
+      </div>
+
+      <div class="package-list">
+        <article class="package-card featured">
+          <div>
+            <span class="badge">Matric Promo</span>
+            <h3>Promo — R1,200</h3>
+            <p>Makeup &amp; Hair</p>
+            <p class="muted">Travel excluded</p>
+          </div>
+          <button class="primary-btn package-select"
+            data-package="Matric Dance Promo"
+            data-price="1200"
+            data-details="Makeup & Hair (travel excluded)">Select</button>
+        </article>
+
+        <article class="package-card">
+          <div>
+            <span class="badge light">Custom</span>
+            <h3>Need something different?</h3>
+            <p>Build a personalised quote for your event.</p>
+          </div>
+          <button class="secondary-btn" data-custom="Matric Dance">Personalised quote</button>
+        </article>
+      </div>
+    </section>
+
+    <section id="weddingScreen" class="screen">
+      <div class="topbar">
+        <button class="icon-btn" data-back="occasionScreen" aria-label="Back">←</button>
+        <div>
+          <p class="eyebrow">WEDDING</p>
+          <h2>Select a package</h2>
+        </div>
+      </div>
+
+      <div class="package-list">
+        <article class="package-card featured">
+          <div>
+            <span class="badge">Wedding Promo 1</span>
+            <h3>R6,000</h3>
+            <ul>
+              <li>Bride</li>
+              <li>2 Bridesmaids</li>
+              <li>Makeup &amp; Hair</li>
+            </ul>
+          </div>
+          <button class="primary-btn package-select"
+            data-package="Wedding Promo 1"
+            data-price="6000"
+            data-details="Bride + 2 Bridesmaids, Makeup & Hair">Select</button>
+        </article>
+
+        <article class="package-card">
+          <div>
+            <span class="badge">Wedding Promo 2</span>
+            <h3>R14,700</h3>
+            <ul>
+              <li>Bride</li>
+              <li>5 Bridesmaids</li>
+              <li>2 × MOB/MOG</li>
+              <li>1 Flower Girl / Granny</li>
+            </ul>
+          </div>
+          <button class="primary-btn package-select"
+            data-package="Wedding Promo 2"
+            data-price="14700"
+            data-details="Bride + 5 Bridesmaids + 2 MOB/MOG + 1 Flower Girl/Granny">Select</button>
+        </article>
+
+        <article class="package-card">
+          <div>
+            <span class="badge light">Custom</span>
+            <h3>Need a personalised quote?</h3>
+            <p>Choose exactly who needs makeup and/or hair.</p>
+          </div>
+          <button class="secondary-btn" data-custom="Wedding">Personalised quote</button>
+        </article>
+      </div>
+    </section>
+
+    <section id="customQuoteScreen" class="screen">
+      <div class="topbar">
+        <button class="icon-btn" id="customBack" aria-label="Back">←</button>
+        <div>
+          <p class="eyebrow">CUSTOM QUOTE</p>
+          <h2>I need services for...</h2>
+        </div>
+      </div>
+
+      <div class="service-toggle">
+        <label class="toggle-pill">
+          <input type="checkbox" id="makeupToggle" checked />
+          <span>💄 Makeup</span>
+        </label>
+        <label class="toggle-pill">
+          <input type="checkbox" id="hairToggle" checked />
+          <span>💇 Hair</span>
+        </label>
+      </div>
+
+      <form id="quoteForm" class="quote-card">
+        <div class="quote-head">
+          <span>People</span>
+          <span>Makeup</span>
+          <span>Hair</span>
+        </div>
+
+        <div id="peopleRows"></div>
+
+        <div class="field-group">
+          <label for="venue">Venue</label>
+          <input id="venue" name="venue" type="text" placeholder="Venue / suburb" />
+          <small>Travel can be calculated once the venue is confirmed.</small>
+        </div>
+
+        <div class="field-group">
+          <label for="notes">Additional notes</label>
+          <textarea id="notes" name="notes" rows="4" placeholder="Anything else we should know?"></textarea>
+        </div>
+
+        <button type="submit" class="primary-btn full-width">Review quote request</button>
+      </form>
+    </section>
+
+    <section id="summaryScreen" class="screen">
+      <div class="topbar">
+        <button class="icon-btn" id="summaryBack" aria-label="Back">←</button>
+        <div>
+          <p class="eyebrow">SUMMARY</p>
+          <h2>Your request</h2>
+        </div>
+      </div>
+
+      <div class="summary-card" id="summaryContent"></div>
+
+      <div class="summary-actions">
+        <a id="whatsappBtn" class="primary-btn full-width" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
+        <a id="emailBtn" class="secondary-btn full-width" href="#">Send by email</a>
+        <button class="text-btn" data-go="homeScreen">Start over</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
