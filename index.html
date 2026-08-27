@@ -1174,22 +1174,23 @@ body::after {
       <div class="package-list">
         <article class="package-card featured">
           <div>
-            <span class="badge">Matric Promo</span>
-            <h3>Whimsical Promo — R2,000</h3>
-            <p>Makeup &amp; Hair</p>
-             <p>Includes</p>
-             <p>Strip Lashes</p>
-             <p>Trail at the Studio</p>
+            <span class="badge">Whimsical Promo</span>
+            <h3>R2,000</h3>
+            <ul>
+              <li>Makeup &amp; Hair</li>
+              <li>Strip Lashes</li>
+              <li>Trial at the Studio</li>
+            </ul>
             <p class="muted">Travel excluded</p>
           </div>
           <button
             class="primary-btn package-select"
-  data-package="Whimsical Promo"
-  data-price="2000"
-  data-details="Makeup & Hair; Includes Strip Lashes and Trial at the Studio"
->
-  Select
-</button>
+            data-package="Whimsical Promo"
+            data-price="2000"
+            data-details="Makeup & Hair; Includes Strip Lashes and Trial at the Studio"
+          >
+            Select
+          </button>
         </article>
 
       </div>
@@ -1208,35 +1209,44 @@ body::after {
       <div class="package-list">
         <article class="package-card featured">
           <div>
-            <span class="badge">Wedding Promo 1</span>
+            <span class="badge">Evermore Wedding Promo</span>
             <h3>R6,000</h3>
             <ul>
-              <li>Bride</li>
+              <li>The Bride</li>
               <li>2 Bridesmaids</li>
               <li>Makeup &amp; Hair</li>
+              <li>Bridal Makeup &amp; Hair Trial</li>
+              <li>1 Artist for your day</li>
+              <li>Luxury Touch Up Kit</li>
+              <li>Strip Lashes for Bride</li>
             </ul>
           </div>
           <button class="primary-btn package-select"
-            data-package="Wedding Promo 1"
+            data-package="Evermore Wedding Promo"
             data-price="6000"
-            data-details="Bride + 2 Bridesmaids, Makeup & Hair">Select</button>
+            data-details="The Bride + 2 Bridesmaids — Makeup & Hair. Includes Bridal Makeup & Hair Trial, 1 Artist for your day, Luxury Touch Up Kit and Strip Lashes for Bride.">Select</button>
         </article>
 
         <article class="package-card">
           <div>
-            <span class="badge">Wedding Promo 2</span>
+            <span class="badge">Enchanted Wedding Promo</span>
             <h3>R14,700</h3>
             <ul>
-              <li>Bride</li>
+              <li>The Bride</li>
               <li>5 Bridesmaids</li>
-              <li>2 × MOB/MOG</li>
-              <li>1 Flower Girl / Granny</li>
+              <li>2 Mothers</li>
+              <li>Flowergirl / Granny</li>
+              <li>Makeup &amp; Hair</li>
+              <li>Bridal Makeup &amp; Hair Trial</li>
+              <li>3 Artists for your day</li>
+              <li>Luxury Touch Up Kit</li>
+              <li>Strip Lashes for Bride</li>
             </ul>
           </div>
           <button class="primary-btn package-select"
-            data-package="Wedding Promo 2"
+            data-package="Enchanted Wedding Promo"
             data-price="14700"
-            data-details="Bride + 5 Bridesmaids + 2 MOB/MOG + 1 Flower Girl/Granny">Select</button>
+            data-details="The Bride + 5 Bridesmaids + 2 Mothers + Flowergirl/Granny — Makeup & Hair. Includes Bridal Makeup & Hair Trial, 3 Artists for your day, Luxury Touch Up Kit and Strip Lashes for Bride.">Select</button>
         </article>
 
         <article class="package-card">
@@ -1841,12 +1851,12 @@ function buildSendQuoteItems() {
   return { items: items, error: "" };
 }
 
-    if (selection.name === "Wedding Promo 1") {
+    if (selection.name === "Evermore Wedding Promo") {
       addQuoteItem(items, "wedding_promo_6000", 1);
       return { items: items, error: "" };
     }
 
-    if (selection.name === "Wedding Promo 2") {
+    if (selection.name === "Enchanted Wedding Promo") {
       addQuoteItem(items, "wedding_promo_14700", 1);
       return { items: items, error: "" };
     }
