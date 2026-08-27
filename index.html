@@ -1908,13 +1908,9 @@ function buildSendQuoteItems() {
       if (label === "Bride") {
         if (makeup > 0 && hair > 0 && makeup === hair) {
           addQuoteItem(items, "bridal_makeup_hair", makeup);
-        } else if (makeup > 0 && hair === 0) {
+        } else {
           addQuoteItem(items, "bridal_makeup", makeup);
-        } else if (hair > 0) {
-          return {
-            items: [],
-            error: "Bride hair-only pricing has not been added to Supabase yet."
-          };
+          addQuoteItem(items, "bridal_hair", hair);
         }
       }
 
