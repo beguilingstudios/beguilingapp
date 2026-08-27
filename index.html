@@ -1508,11 +1508,31 @@ document.getElementById("summaryBack").addEventListener("click", function () {
 });
 
 function configureCustomQuote() {
-  state.people.bride.label = "Bride";
-  state.people.bride.sub = "Includes your trial";
+  renderPeopleRows();
+}
+
+function resetCustomQuote() {
   state.people.bride.makeup = 1;
   state.people.bride.hair = 1;
+
+  state.people.bridesmaids.makeup = 0;
+  state.people.bridesmaids.hair = 0;
+
+  state.people.mother.makeup = 0;
+  state.people.mother.hair = 0;
+
+  state.people.flower.makeup = 0;
+  state.people.flower.hair = 0;
+
+  state.people.additional.makeup = 0;
+  state.people.additional.hair = 0;
+
+  document.getElementById("makeupToggle").checked = true;
+  document.getElementById("hairToggle").checked = true;
+  document.getElementById("notes").value = "";
+
   renderPeopleRows();
+  syncServiceAvailability();
 }
 
 function renderPeopleRows() {
@@ -2005,6 +2025,9 @@ function sendQuoteEmail() {
         state.selection = null;
         state.place = null;
         state.route = null;
+
+        // Reset all personalised wedding + / - quantities for the next client.
+        resetCustomQuote();
 
         document.getElementById("clientDetailsForm").reset();
         document.getElementById("clientDetailsForm").style.display = "";
