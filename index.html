@@ -1134,10 +1134,36 @@ body::after {
       <div class="hero-card">
         <p class="eyebrow">WELCOME TO</p>
         <h2>Beguiling Studios</h2>
-        <button class="primary-btn" data-go="weddingScreen">
-        Touch to start
+        <button class="primary-btn" data-go="occasionScreen">Touch to start</button>
+      </div>
+    </section>
+
+    <section id="occasionScreen" class="screen">
+      <div class="topbar">
+        <button class="icon-btn" data-back="homeScreen" aria-label="Back">←</button>
+        <div>
+          <p class="eyebrow">STEP 1</p>
+          <h2>Choose your occasion</h2>
+        </div>
+        <div class="page-logo" aria-label="Beguiling Studios logo"></div>
+      </div>
+
+      <div class="choice-grid">
+        <button class="occasion-card" data-occasion="matric">
+          <strong>Matric Dance</strong>
+          <small>Makeup, hair and travel options</small>
         </button>
 
+        <button class="occasion-card" data-occasion="wedding">
+          <strong>Wedding</strong>
+          <small>Bride and bridal party packages</small>
+        </button>
+      </div>
+    </section>
+
+    <section id="matricScreen" class="screen">
+      <div class="topbar">
+        <button class="icon-btn" data-back="occasionScreen" aria-label="Back">←</button>
         <div>
           <p class="eyebrow">MATRIC DANCE</p>
           <h2>Select a package</h2>
@@ -1435,12 +1461,11 @@ document.addEventListener("click", function (event) {
     return;
   }
 
-var occasion = findParentWithAttribute(event.target, "data-occasion");
-if (occasion) {
-  state.occasion = "wedding";
-  showScreen("weddingScreen");
-  return;
-}
+  var occasion = findParentWithAttribute(event.target, "data-occasion");
+  if (occasion) {
+    state.occasion = occasion.getAttribute("data-occasion");
+    showScreen(state.occasion === "matric" ? "matricScreen" : "weddingScreen");
+    return;
   }
 
   var custom = findParentWithAttribute(event.target, "data-custom");
