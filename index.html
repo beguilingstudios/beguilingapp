@@ -1454,11 +1454,12 @@ document.addEventListener("click", function (event) {
     return;
   }
 
-  var occasion = findParentWithAttribute(event.target, "data-occasion");
-  if (occasion) {
-    state.occasion = occasion.getAttribute("data-occasion");
-    showScreen(state.occasion === "matric" ? "matricScreen" : "weddingScreen");
-    return;
+var occasion = findParentWithAttribute(event.target, "data-occasion");
+if (occasion) {
+  state.occasion = "wedding";
+  showScreen("weddingScreen");
+  return;
+}
   }
 
   var custom = findParentWithAttribute(event.target, "data-custom");
