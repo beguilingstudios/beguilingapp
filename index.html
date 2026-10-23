@@ -2239,7 +2239,7 @@ function showPlaceSuggestions(items) {
 
   var attribution = document.createElement("div");
   attribution.className = "provider-attribution";
-  attribution.innerHTML = "Powered by Google Maps";
+  attribution.innerHTML = "Powered by Geoapify";
   box.appendChild(attribution);
 
   box.className = "places-suggestions open";
@@ -2271,7 +2271,7 @@ function selectVenueSuggestion(placeId, fullText, mainText, secondaryText, lat, 
 
   // Google Places autocomplete returns a place ID. Coordinates are not required:
   // the Google Routes API calculates the route directly to that place ID.
-  if (!placeId) {
+  if (!lat || !lng) {
     clearPlaceSelection();
     document.getElementById("venueHelp").innerHTML =
       "That venue result did not include a valid Google Place ID. Please choose another result.";
@@ -2283,8 +2283,8 @@ function selectVenueSuggestion(placeId, fullText, mainText, secondaryText, lat, 
 
   document.getElementById("clientVenue").value = displayText;
   document.getElementById("selectedPlaceId").value = placeId;
-  document.getElementById("selectedVenueLat").value = "";
-  document.getElementById("selectedVenueLng").value = "";
+  document.getElementById("selectedVenueLat").value = lat || "";
+  document.getElementById("selectedVenueLng").value = lng || "";
   document.getElementById("googleMapsLink").value =
     "https://www.google.com/maps/search/?api=1&query=" +
     encodeURIComponent(displayText);
@@ -2298,26 +2298,34 @@ function selectVenueSuggestion(placeId, fullText, mainText, secondaryText, lat, 
   document.getElementById("venueHelp").innerHTML =
     "Venue selected. Calculating Google Maps driving distance...";
 
-  calculateVenueDistance(placeId);
+  calculateVenueDistance(lat, lng);
+
 }
 
-function calculateVenueDistance(placeId) {
+function calculateVenueDistance(lat, lng) {
   postToPlacesFunction(
-    { action: "route", placeId: placeId },
+    {
+      action: "route",
+      lat: Number(lat),
+      lng: Number(lng)
+    },
     function (error, data) {
       if (error || !data) {
         document.getElementById("venueHelp").innerHTML =
-          "Venue selected, but Google Maps travel distance is unavailable: " +
-          escapeHtml(error ? error.message : "Unknown error");
+          "Venue selected, but travel distance is unavailable.";
         return;
       }
 
       var km = Number(data.distanceKm);
+
       document.getElementById("travelDistanceKm").value =
         !isNaN(km) ? km.toFixed(1) : "";
-      document.getElementById("travelDuration").value = data.durationText || "";
+
+      document.getElementById("travelDuration").value =
+        data.durationText || "";
+
       document.getElementById("venueHelp").innerHTML =
-        "Venue selected and Google Maps driving distance calculated.";
+        "Venue selected and driving distance calculated.";
     }
   );
 }
@@ -2339,7 +2347,7 @@ document.getElementById("clientVenue").addEventListener("input", function () {
   }
 
   document.getElementById("venueHelp").innerHTML =
-    "Searching Google Places...";
+    "Searching venues...";
 
   placesTimer = window.setTimeout(function () {
     searchVenueSuggestions(query);
