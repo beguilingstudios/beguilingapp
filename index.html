@@ -1409,9 +1409,9 @@ var state = {
 var SEND_QUOTE_FUNCTION = "send-quote";
 
 /*
-  OPENROUTESERVICE VENUE SEARCH + ROUTING SETUP
-  These point to your Supabase project. The OpenRouteService API key stays securely
-  inside the Supabase Edge Function and is never exposed in the browser.
+  GOOGLE PLACES + ROUTES VENUE SEARCH
+  Google API key stays securely inside the Supabase Edge Function.
+  The browser calls only the Supabase "google-maps" Edge Function.
 */
 var SUPABASE_URL = "https://ccxqeuztruvrfwkkehwq.supabase.co";
 var SUPABASE_ANON_KEY = "sb_publishable_vCZAPsOrDtKK7f4FB0evoQ_frvNtWcz";
@@ -2239,7 +2239,7 @@ function showPlaceSuggestions(items) {
 
   var attribution = document.createElement("div");
   attribution.className = "provider-attribution";
-  attribution.innerHTML = "Geocoding by openrouteservice · OpenStreetMap";
+  attribution.innerHTML = "Powered by Google Maps";
   box.appendChild(attribution);
 
   box.className = "places-suggestions open";
@@ -2269,13 +2269,12 @@ function searchVenueSuggestions(query) {
 function selectVenueSuggestion(placeId, fullText, mainText, secondaryText, lat, lng) {
   closePlaceSuggestions();
 
-  var latitude = Number(lat);
-  var longitude = Number(lng);
-
-  if (lat === "" || lng === "" || !isFinite(latitude) || !isFinite(longitude)) {
+  // Google Places autocomplete returns a place ID. Coordinates are not required:
+  // the Google Routes API calculates the route directly to that place ID.
+  if (!placeId) {
     clearPlaceSelection();
     document.getElementById("venueHelp").innerHTML =
-      "That venue result did not include valid map coordinates. Please choose another result.";
+      "That venue result did not include a valid Google Place ID. Please choose another result.";
     return;
   }
 
@@ -2283,12 +2282,12 @@ function selectVenueSuggestion(placeId, fullText, mainText, secondaryText, lat, 
   var displayText = fullText || mainText || secondaryText || "Selected venue";
 
   document.getElementById("clientVenue").value = displayText;
-  document.getElementById("selectedPlaceId").value = placeId || "";
-  document.getElementById("selectedVenueLat").value = latitude;
-  document.getElementById("selectedVenueLng").value = longitude;
+  document.getElementById("selectedPlaceId").value = placeId;
+  document.getElementById("selectedVenueLat").value = "";
+  document.getElementById("selectedVenueLng").value = "";
   document.getElementById("googleMapsLink").value =
     "https://www.google.com/maps/search/?api=1&query=" +
-    encodeURIComponent(latitude + "," + longitude);
+    encodeURIComponent(displayText);
 
   document.getElementById("selectedVenueName").innerHTML =
     escapeHtml(mainText || displayText);
@@ -2297,18 +2296,18 @@ function selectVenueSuggestion(placeId, fullText, mainText, secondaryText, lat, 
 
   document.getElementById("selectedVenueCard").style.display = "block";
   document.getElementById("venueHelp").innerHTML =
-    "Venue selected. Calculating travel distance...";
+    "Venue selected. Calculating Google Maps driving distance...";
 
-  calculateVenueDistance(latitude, longitude);
+  calculateVenueDistance(placeId);
 }
 
-function calculateVenueDistance(lat, lng) {
+function calculateVenueDistance(placeId) {
   postToPlacesFunction(
-    { action: "route", destinationLat: Number(lat), destinationLng: Number(lng) },
+    { action: "route", placeId: placeId },
     function (error, data) {
       if (error || !data) {
         document.getElementById("venueHelp").innerHTML =
-          "Venue selected, but travel distance is unavailable: " +
+          "Venue selected, but Google Maps travel distance is unavailable: " +
           escapeHtml(error ? error.message : "Unknown error");
         return;
       }
@@ -2318,7 +2317,7 @@ function calculateVenueDistance(lat, lng) {
         !isNaN(km) ? km.toFixed(1) : "";
       document.getElementById("travelDuration").value = data.durationText || "";
       document.getElementById("venueHelp").innerHTML =
-        "Venue selected and driving distance calculated.";
+        "Venue selected and Google Maps driving distance calculated.";
     }
   );
 }
@@ -2335,12 +2334,12 @@ document.getElementById("clientVenue").addEventListener("input", function () {
   if (query.length < 3) {
     closePlaceSuggestions();
     document.getElementById("venueHelp").innerHTML =
-      "Type at least 3 characters to search venue search.";
+      "Type at least 3 characters to search for a venue.";
     return;
   }
 
   document.getElementById("venueHelp").innerHTML =
-    "Searching venue search...";
+    "Searching Google Places...";
 
   placesTimer = window.setTimeout(function () {
     searchVenueSuggestions(query);
