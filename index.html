@@ -2282,42 +2282,39 @@ function selectVenueSuggestion(placeId, fullText, mainText, secondaryText, lat, 
   var displayText = fullText || mainText || secondaryText || "Selected venue";
 
   document.getElementById("clientVenue").value = displayText;
-  document.getElementById("selectedPlaceId").value = placeId;
-  document.getElementById("selectedVenueLat").value = "";
-  document.getElementById("selectedVenueLng").value = "";
-  document.getElementById("googleMapsLink").value =
-    "https://www.google.com/maps/search/?api=1&query=" +
-    encodeURIComponent(displayText);
+document.getElementById("selectedPlaceId").value = placeId || "";
 
-  document.getElementById("selectedVenueName").innerHTML =
-    escapeHtml(mainText || displayText);
-  document.getElementById("selectedVenueAddress").innerHTML =
-    escapeHtml(secondaryText || displayText);
+document.getElementById("selectedVenueLat").value = lat || "";
+document.getElementById("selectedVenueLng").value = lng || "";
 
-  document.getElementById("selectedVenueCard").style.display = "block";
-  document.getElementById("venueHelp").innerHTML =
-    "Venue selected. Calculating Google Maps driving distance...";
-
-  calculateVenueDistance(placeId);
+calculateVenueDistance(lat, lng);
 }
 
-function calculateVenueDistance(placeId) {
+function calculateVenueDistance(lat, lng) {
   postToPlacesFunction(
-    { action: "route", placeId: placeId },
+    {
+      action: "route",
+      lat: Number(lat),
+      lng: Number(lng)
+    },
     function (error, data) {
       if (error || !data) {
         document.getElementById("venueHelp").innerHTML =
-          "Venue selected, but Google Maps travel distance is unavailable: " +
+          "Venue selected, but travel distance is unavailable: " +
           escapeHtml(error ? error.message : "Unknown error");
         return;
       }
 
       var km = Number(data.distanceKm);
+
       document.getElementById("travelDistanceKm").value =
         !isNaN(km) ? km.toFixed(1) : "";
-      document.getElementById("travelDuration").value = data.durationText || "";
+
+      document.getElementById("travelDuration").value =
+        data.durationText || "";
+
       document.getElementById("venueHelp").innerHTML =
-        "Venue selected and Google Maps driving distance calculated.";
+        "Venue selected and driving distance calculated.";
     }
   );
 }
